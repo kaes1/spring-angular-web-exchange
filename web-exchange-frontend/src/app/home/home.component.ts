@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {ApiService} from '../core/api.service';
+import {Currency} from '../model/currency.model';
 
 @Component({
   selector: 'app-home',
@@ -7,21 +9,24 @@ import {HttpClient} from '@angular/common/http';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  testResponse = '';
 
-  constructor(private http: HttpClient) {
+  currencies: Currency[] = [];
+
+  constructor(private apiService: ApiService) {
   }
 
   ngOnInit(): void {
-    this.fetchTestString();
+    this.fetchTestData();
   }
 
-  private fetchTestString() {
-    this.http.get('api/test/5', {responseType: 'text'}).subscribe(response => {
+  private fetchTestData() {
+    this.apiService.get<Currency>('api/currencies/PLN').subscribe(response => {
       console.log(response);
-      this.testResponse = response;
     });
-    return 'Response';
+    this.apiService.get<Currency[]>('api/currencies').subscribe(response => {
+      console.log(response);
+      this.currencies = response;
+    });
   }
 
 }

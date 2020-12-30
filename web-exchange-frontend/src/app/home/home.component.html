@@ -1,5 +1,7 @@
 <h2>home works!</h2>
 <div>
-  Test Response:
-  <div>{{testResponse}}</div>
+  Currencies:
+  <div *ngFor="let currency of currencies">
+    {{currency.id}}, {{currency.currencyCode}}
+  </div>
 </div>
