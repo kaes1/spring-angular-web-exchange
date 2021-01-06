@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
-import {CoreModule} from './core.module';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable({
-  providedIn: CoreModule
+  providedIn: 'root'
 })
 export class ApiService {
 

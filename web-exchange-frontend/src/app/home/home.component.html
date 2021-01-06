@@ -1,7 +1,12 @@
-<h2>home works!</h2>
+<h2>Home Component!</h2>
+<h3>Logged in: {{loggedIn}}</h3>
+
 <div>
-  Currencies:
-  <div *ngFor="let currency of currencies">
-    {{currency.id}}, {{currency.currencyCode}}
-  </div>
+  <app-login></app-login>
+  <button (click)="logout()">Logout</button>
+</div>
+
+<div>
+  <button (click)="testOpenEndpoint()">Test open endpoint</button>
+  <button (click)="testSecureEndpoint()">Test secure endpoint</button>
 </div>

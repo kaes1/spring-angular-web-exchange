@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {ApiService} from '../core/api.service';
+import {ApiService} from '../api/api.service';
 import {Currency} from '../model/currency.model';
+import {AuthService} from '../auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -10,23 +10,29 @@ import {Currency} from '../model/currency.model';
 })
 export class HomeComponent implements OnInit {
 
-  currencies: Currency[] = [];
+  loggedIn = false;
 
-  constructor(private apiService: ApiService) {
+  constructor(private apiService: ApiService,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
-    this.fetchTestData();
+    this.authService.getLoggedIn().subscribe(loggedIn => this.loggedIn = loggedIn);
   }
 
-  private fetchTestData() {
-    this.apiService.get<Currency>('api/currencies/PLN').subscribe(response => {
+  logout() {
+    this.authService.logout();
+  }
+
+  testOpenEndpoint() {
+    this.apiService.get('api/open').subscribe(response => {
       console.log(response);
-    });
-    this.apiService.get<Currency[]>('api/currencies').subscribe(response => {
-      console.log(response);
-      this.currencies = response;
     });
   }
 
+  testSecureEndpoint() {
+    this.apiService.get('api/secure').subscribe(response => {
+      console.log(response);
+    });
+  }
 }

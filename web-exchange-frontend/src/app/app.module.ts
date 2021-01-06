@@ -5,8 +5,13 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home/home.component';
 import {LoginComponent} from './login/login.component';
+import {JwtModule} from '@auth0/angular-jwt';
 import {HttpClientModule} from '@angular/common/http';
-import {CoreModule} from './core/core.module';
+import {FormsModule} from '@angular/forms';
+
+export function tokenGetter() {
+  return localStorage.getItem('jwt');
+}
 
 @NgModule({
   declarations: [
@@ -15,9 +20,17 @@ import {CoreModule} from './core/core.module';
     LoginComponent
   ],
   imports: [
-    CoreModule,
     BrowserModule,
-    AppRoutingModule
+    HttpClientModule,
+    FormsModule,
+    AppRoutingModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter,
+        allowedDomains: ['localhost:8080'],
+        disallowedRoutes: [],
+      }
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
