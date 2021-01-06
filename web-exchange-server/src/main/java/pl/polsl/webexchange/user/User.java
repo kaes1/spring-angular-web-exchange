@@ -16,15 +16,16 @@ public class User {
     @GeneratedValue
     private Long id;
     @Column(unique = true)
-    private String username;
     private String email;
+    @Column(unique = true)
+    private String username;
     private String password;
 
     //TODO Add Admin role
 
-    public User(String username, String email, String password) {
-        this.username = username;
+    public User(String email, String username, String password) {
         this.email = email;
+        this.username = username;
         this.password = password;
     }
 }

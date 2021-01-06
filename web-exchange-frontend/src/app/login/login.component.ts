@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,24 +9,33 @@ import {AuthService} from '../auth/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  username = '';
+  j = JSON;
+
+  login = '';
   password = '';
 
-  constructor(private authService: AuthService) {
+  loginFailed = false;
+  loginFailedMessage = '';
+
+  constructor(private authService: AuthService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
   }
 
+  submitLogin() {
+    this.loginFailed = false;
 
-  login() {
-    this.authService.login(this.username, this.password).subscribe(response => {
+    this.authService.login(this.login, this.password).subscribe(response => {
       console.log('Got response!');
       console.log(response);
+      this.router.navigate(['/']);
     }, error => {
       console.log('Got error!');
       console.log(error);
+      this.loginFailed = true;
+      this.loginFailedMessage = error.message;
     });
   }
-
 }

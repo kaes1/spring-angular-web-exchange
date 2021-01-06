@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiService} from '../api/api.service';
-import {Currency} from '../model/currency.model';
 import {AuthService} from '../auth/auth.service';
 
 @Component({

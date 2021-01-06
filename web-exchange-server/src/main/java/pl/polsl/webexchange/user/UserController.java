@@ -1,23 +1,16 @@
 package pl.polsl.webexchange.user;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.polsl.webexchange.security.LoginRequest;
-import pl.polsl.webexchange.security.LoginResponse;
+import pl.polsl.webexchange.errorhandling.NotUniqueException;
 
-import java.util.Date;
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,15 +21,18 @@ public class UserController {
     private final UserRepository userRepository;
 
     @PostMapping("api/register")
-    public ResponseEntity<Void> registerUser(@RequestBody UserRegistrationRequest registrationRequest) {
-        if (userRepository.findByUsername(registrationRequest.getUsername()).isPresent())
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    public ResponseEntity<Void> registerUser(@Valid @RequestBody RegisterRequest registrationRequest) {
 
-        User user = new User(
-                registrationRequest.getUsername(),
-                registrationRequest.getEmail(),
-                passwordEncoder.encode(registrationRequest.getPassword())
-        );
+        String email = registrationRequest.getEmail().toLowerCase();
+        String username = registrationRequest.getUsername().toLowerCase();
+
+        if (userRepository.findByEmailIgnoreCase(email).isPresent())
+            throw new NotUniqueException("Email already taken");
+
+        if (userRepository.findByUsernameIgnoreCase(username).isPresent())
+            throw new NotUniqueException("Username already taken");
+
+        User user = new User(email, username, passwordEncoder.encode(registrationRequest.getPassword()));
 
         userRepository.save(user);
         return ResponseEntity.ok().build();

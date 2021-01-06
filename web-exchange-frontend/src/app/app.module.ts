@@ -8,6 +8,8 @@ import {LoginComponent} from './login/login.component';
 import {JwtModule} from '@auth0/angular-jwt';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
+import { NavMenuComponent } from './nav-menu/nav-menu.component';
+import { RegisterComponent } from './register/register.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -17,7 +19,9 @@ export function tokenGetter() {
   declarations: [
     AppComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    NavMenuComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

@@ -1,13 +1,28 @@
-<p>login works!</p>
+<h1>Login</h1>
 
-<form #f="ngForm" (ngSubmit)="login()">
+<form #f="ngForm" (ngSubmit)="submitLogin()">
 
-  <label for="usernameInput">Username:</label>
-  <input id="usernameInput" type="text" name="username" [(ngModel)]="username" required>
+  <div class="form-group">
+    <label for="loginInput">Username or Email:</label>
+    <input id="loginInput" name="login" type="text" class="form-control"  [(ngModel)]="login" #loginInput="ngModel" required>
 
-  <label for="passwordInput">Password:</label>
-  <input id="passwordInput" type="password" name="password" [(ngModel)]="password" required>
+    <div *ngIf="loginInput.invalid && (loginInput.dirty || loginInput.touched)" class="invalid-feedback d-block">
+      <div *ngIf="loginInput.errors?.required"> Username or Email is required</div>
+    </div>
 
+  </div>
 
-  <button type="submit">Login</button>
+  <div class="form-group">
+    <label for="passwordInput">Password:</label>
+    <input id="passwordInput" name="password" type="password" class="form-control" [(ngModel)]="password" #passwordInput="ngModel" required>
+
+    <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="invalid-feedback d-block">
+      <div *ngIf="passwordInput.errors?.required">Password is required</div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="!f.valid">Login</button>
+
+  <p *ngIf="loginFailed" class="text-danger">{{loginFailedMessage}}</p>
+
 </form>

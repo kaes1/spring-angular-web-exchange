@@ -3,6 +3,7 @@ package pl.polsl.webexchange.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import pl.polsl.webexchange.user.UserRepository;
 
 import java.util.Date;
 
@@ -34,9 +36,11 @@ public class LoginController {
                     .withSubject(userDetails.getUsername())
                     .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                     .sign(Algorithm.HMAC512("Secret"));
-            return ResponseEntity.ok(new LoginResponse(userDetails.getUsername(), token));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(LoginResponse.success(userDetails.getUsername(), token));
         } catch (AuthenticationException exception) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(LoginResponse.failed("Invalid username or password"));
         }
     }
 }
