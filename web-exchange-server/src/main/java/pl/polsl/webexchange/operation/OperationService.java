@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.polsl.webexchange.currency.Currency;
 import pl.polsl.webexchange.currency.CurrencyRepository;
+import pl.polsl.webexchange.currency.CurrencyService;
 import pl.polsl.webexchange.currencyrate.CurrencyRate;
 import pl.polsl.webexchange.currencyrate.CurrencyRateRepository;
+import pl.polsl.webexchange.currencyrate.CurrencyRateService;
 import pl.polsl.webexchange.errorhandling.InvalidOperationException;
 import pl.polsl.webexchange.operation.addfunds.AddFundsOperation;
 import pl.polsl.webexchange.operation.addfunds.AddFundsOperationRepository;
@@ -18,6 +20,7 @@ import pl.polsl.webexchange.operation.tradecurrency.TradeCurrencyResponse;
 import pl.polsl.webexchange.user.User;
 import pl.polsl.webexchange.usercurrencybalance.UserCurrencyBalance;
 import pl.polsl.webexchange.usercurrencybalance.UserCurrencyBalanceRepository;
+import pl.polsl.webexchange.usercurrencybalance.UserCurrencyBalanceService;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -27,19 +30,19 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class OperationService {
 
-    private final CurrencyRepository currencyRepository;
-    private final CurrencyRateRepository currencyRateRepository;
+    private final CurrencyService currencyService;
+    private final CurrencyRateService currencyRateService;
+    private final UserCurrencyBalanceService userCurrencyBalanceService;
     private final AddFundsOperationRepository addFundsOperationRepository;
     private final TradeCurrencyOperationRepository tradeCurrencyOperationRepository;
-    private final UserCurrencyBalanceRepository userCurrencyBalanceRepository;
 
     @Transactional
     public AddFundsResponse addFunds(User user, AddFundsRequest addFundsRequest) {
-        Currency currency = currencyRepository.findByCurrencyCode(addFundsRequest.getCurrencyCode()).orElseThrow();
-        UserCurrencyBalance userCurrencyBalance = getUserCurrencyBalance(user, currency);
+        Currency currency = currencyService.getCurrency(addFundsRequest.getCurrencyCode());
+        UserCurrencyBalance userCurrencyBalance = userCurrencyBalanceService.getUserCurrencyBalance(user, currency);
 
         userCurrencyBalance.addAmount(addFundsRequest.getAmount());
-        userCurrencyBalanceRepository.save(userCurrencyBalance);
+        userCurrencyBalanceService.save(userCurrencyBalance);
 
         AddFundsOperation operation = new AddFundsOperation(user, LocalDateTime.now(), currency, addFundsRequest.getAmount());
         addFundsOperationRepository.save(operation);
@@ -47,13 +50,13 @@ public class OperationService {
     }
 
     public TradeCurrencyResponse tradeCurrency(User user, TradeCurrencyRequest tradeCurrencyRequest) {
-        Currency boughtCurrency = currencyRepository.findByCurrencyCode(tradeCurrencyRequest.getBoughtCurrencyCode()).orElseThrow();
-        Currency soldCurrency = currencyRepository.findByCurrencyCode(tradeCurrencyRequest.getSoldCurrencyCode()).orElseThrow();
+        Currency boughtCurrency = currencyService.getCurrency(tradeCurrencyRequest.getBoughtCurrencyCode());
+        Currency soldCurrency = currencyService.getCurrency(tradeCurrencyRequest.getSoldCurrencyCode());
 
-        CurrencyRate currencyRate = currencyRateRepository.findFirstByBaseCurrencyAndTargetCurrencyOrderByDateTimeDesc(soldCurrency, boughtCurrency).orElseThrow();
+        CurrencyRate currencyRate = currencyRateService.getLatestCurrencyRate(soldCurrency, boughtCurrency);
 
-        UserCurrencyBalance boughtBalance = getUserCurrencyBalance(user, boughtCurrency);
-        UserCurrencyBalance soldBalance = getUserCurrencyBalance(user, soldCurrency);
+        UserCurrencyBalance boughtBalance = userCurrencyBalanceService.getUserCurrencyBalance(user, boughtCurrency);
+        UserCurrencyBalance soldBalance = userCurrencyBalanceService.getUserCurrencyBalance(user, soldCurrency);
 
         if (soldBalance.getAmount().compareTo(tradeCurrencyRequest.getSellAmount()) < 0) {
             throw new InvalidOperationException("Not enough funds to sell currency");
@@ -65,17 +68,12 @@ public class OperationService {
         soldBalance.subtractAmount(soldAmount);
         boughtBalance.addAmount(boughtAmount);
 
-        userCurrencyBalanceRepository.save(boughtBalance);
-        userCurrencyBalanceRepository.save(soldBalance);
+        userCurrencyBalanceService.save(boughtBalance);
+        userCurrencyBalanceService.save(soldBalance);
 
         TradeCurrencyOperation operation = new TradeCurrencyOperation(user, LocalDateTime.now(), boughtCurrency, boughtAmount, soldCurrency, soldAmount, currencyRate);
         tradeCurrencyOperationRepository.save(operation);
 
         return new TradeCurrencyResponse(boughtCurrency.getCurrencyCode(), soldCurrency.getCurrencyCode(), boughtAmount, soldAmount, boughtBalance.getAmount(), soldBalance.getAmount());
-    }
-
-    private UserCurrencyBalance getUserCurrencyBalance(User user, Currency currency) {
-        return userCurrencyBalanceRepository.findByUserAndCurrency(user, currency)
-                .orElse(new UserCurrencyBalance(user, currency));
     }
 }
