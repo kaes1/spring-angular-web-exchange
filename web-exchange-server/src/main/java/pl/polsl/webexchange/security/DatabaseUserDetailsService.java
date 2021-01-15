@@ -17,7 +17,6 @@ public class DatabaseUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
         return userRepository.findByUsernameIgnoreCase(usernameOrEmail)
                 .or(() -> userRepository.findByEmailIgnoreCase(usernameOrEmail))
-                .map(DatabaseUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + usernameOrEmail + " not found"));
     }
 }

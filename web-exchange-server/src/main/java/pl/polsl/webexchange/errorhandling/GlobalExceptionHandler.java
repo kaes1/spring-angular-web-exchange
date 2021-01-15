@@ -17,6 +17,19 @@ import java.util.Date;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(InvalidOperationException.class)
+    protected ResponseEntity<Object> handleInvalidOperationException(InvalidOperationException ex, WebRequest request) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(new Date())
+                .status(httpStatus.value())
+                .error(httpStatus.getReasonPhrase())
+                .message(ex.getMessage())
+                .path(((ServletWebRequest) request).getRequest().getRequestURI())
+                .build();
+        return super.handleExceptionInternal(ex, error, new HttpHeaders(), httpStatus, request);
+    }
+
     @ExceptionHandler(NotUniqueException.class)
     protected ResponseEntity<Object> handleNotUniqueException(NotUniqueException ex, WebRequest request) {
         HttpStatus httpStatus = HttpStatus.CONFLICT;
