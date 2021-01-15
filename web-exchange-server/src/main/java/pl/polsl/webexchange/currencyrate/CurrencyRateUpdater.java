@@ -16,9 +16,10 @@ public class CurrencyRateUpdater {
     private final CurrencyRepository currencyRepository;
     private final CurrencyRateRepository currencyRateRepository;
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(cron = "0 * * * * *")
     private void updateCurrencyRates() {
         LocalDateTime date = LocalDateTime.now();
+        System.out.println("Updating currency rates now!" + date);
         currencyRepository.findAll().forEach(baseCurrency -> {
             ExchangeRateApiModel currencyRates = getCurrencyRatesFromApi(baseCurrency);
             currencyRates.getRates().forEach((code, rate) -> {

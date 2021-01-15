@@ -42,14 +42,6 @@ public class WebExchangeApplication {
 			czk = currencyRepository.save(czk);
 
 			currencyRepository.findAll().forEach(System.out::println);
-
-			CurrencyRate eurToPln = new CurrencyRate(eur, pln, new BigDecimal("4.5248"), LocalDateTime.now());
-			CurrencyRate plnToEur = new CurrencyRate(pln, eur, new BigDecimal("0.2210042433"), LocalDateTime.now());
-
-			currencyRateRepository.save(eurToPln);
-			currencyRateRepository.save(plnToEur);
-
-			currencyRateRepository.findAll().forEach(System.out::println);
 		};
 	}
 
