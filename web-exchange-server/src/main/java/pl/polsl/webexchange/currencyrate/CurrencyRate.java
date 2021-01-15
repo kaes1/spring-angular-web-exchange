@@ -17,10 +17,10 @@ public class CurrencyRate {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Currency baseCurrency;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Currency targetCurrency;
 
     @Column(precision = 16, scale = 10)
