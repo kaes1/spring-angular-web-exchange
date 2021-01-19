@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +14,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class UserController {
+public class RegisterController {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -36,15 +35,5 @@ public class UserController {
 
         userRepository.save(user);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("api/secure")
-    public ResponseEntity<String[]> testSecurity() {
-        return ResponseEntity.ok(new String[] {"Secure response!"});
-    }
-
-    @GetMapping("api/open")
-    public ResponseEntity<String[]> testOpen() {
-        return ResponseEntity.ok(new String[] {"Open response!"});
     }
 }
