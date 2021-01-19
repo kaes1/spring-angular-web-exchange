@@ -26,4 +26,7 @@ public abstract class Operation {
         this.user = user;
         this.dateTime = dateTime;
     }
+
+    abstract public OperationHistory toOperationHistory();
+
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 import pl.polsl.webexchange.currency.Currency;
 import pl.polsl.webexchange.currencyrate.CurrencyRate;
 import pl.polsl.webexchange.operation.Operation;
+import pl.polsl.webexchange.operation.OperationHistory;
 import pl.polsl.webexchange.user.User;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 @Entity
 @Getter
@@ -41,5 +43,13 @@ public class TradeCurrencyOperation extends Operation {
         this.soldCurrency = soldCurrency;
         this.soldAmount = soldAmount;
         this.currencyRate = currencyRate;
+    }
+
+    @Override
+    public OperationHistory toOperationHistory() {
+        return new OperationHistory(
+                this.getDateTime(),
+                String.format(Locale.ROOT, "Bought %.4f %s for %.4f %s", boughtAmount, boughtCurrency.getCurrencyCode(), soldAmount, soldCurrency.getCurrencyCode())
+        );
     }
 }

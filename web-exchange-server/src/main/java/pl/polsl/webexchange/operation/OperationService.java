@@ -25,6 +25,8 @@ import pl.polsl.webexchange.usercurrencybalance.UserCurrencyBalanceService;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +37,7 @@ public class OperationService {
     private final UserCurrencyBalanceService userCurrencyBalanceService;
     private final AddFundsOperationRepository addFundsOperationRepository;
     private final TradeCurrencyOperationRepository tradeCurrencyOperationRepository;
+    private final OperationRepository operationRepository;
 
     @Transactional
     public AddFundsResponse addFunds(User user, AddFundsRequest addFundsRequest) {
@@ -76,4 +79,19 @@ public class OperationService {
 
         return new TradeCurrencyResponse(boughtCurrency.getCurrencyCode(), soldCurrency.getCurrencyCode(), boughtAmount, soldAmount, boughtBalance.getAmount(), soldBalance.getAmount());
     }
+
+    public List<OperationHistory> getOperationHistory(User user)  {
+        List<Operation> operations = operationRepository.findTop20ByUserOrderByDateTimeDesc(user);
+        return operations.stream()
+                .map(Operation::toOperationHistory)
+                .collect(Collectors.toList());
+    }
+
+    public List<OperationHistory> getOperationHistory(User user, LocalDateTime from, LocalDateTime to)  {
+        List<Operation> operations = operationRepository.findAllByUserAndDateTimeBetweenOrderByDateTimeDesc(user, from, to);
+        return operations.stream()
+                .map(Operation::toOperationHistory)
+                .collect(Collectors.toList());
+    }
+
 }
