@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import pl.polsl.webexchange.user.User;
 import pl.polsl.webexchange.user.UserRepository;
 
 import java.util.Date;
@@ -31,13 +32,13 @@ public class LoginController {
                     loginRequest.getLogin(),
                     loginRequest.getPassword()
             ));
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            User user = (User) authentication.getPrincipal();
             String token = JWT.create()
-                    .withSubject(userDetails.getUsername())
+                    .withSubject(user.getUsername())
                     .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                     .sign(Algorithm.HMAC512("Secret"));
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(LoginResponse.success(userDetails.getUsername(), token));
+                    .body(LoginResponse.success(user.getUsername(), token, user.getRole()));
         } catch (AuthenticationException exception) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(LoginResponse.failed("Invalid username or password"));

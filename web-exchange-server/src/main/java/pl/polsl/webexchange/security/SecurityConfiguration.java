@@ -2,6 +2,7 @@ package pl.polsl.webexchange.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.polsl.webexchange.user.Role;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -29,8 +31,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/register").permitAll()
-                .antMatchers("/api/currencies/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/currencies/**").permitAll()
                 .antMatchers("/api/currencyRates/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/currencies").hasAuthority(Role.ROLE_ADMIN.name())
+//                .antMatchers(HttpMethod.POST,"/api/currencies").authenticated()
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
                 .and()

@@ -22,7 +22,7 @@ public class UserCurrencyBalance {
     @ManyToOne(optional = false)
     private User user;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Currency currency;
 
     @Column(precision = 16, scale = 10)

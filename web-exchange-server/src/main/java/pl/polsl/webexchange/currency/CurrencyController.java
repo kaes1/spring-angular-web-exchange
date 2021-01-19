@@ -2,11 +2,10 @@ package pl.polsl.webexchange.currency;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,5 +27,10 @@ public class CurrencyController {
     public CurrencyDTO getCurrency(@PathVariable String currencyCode) {
         Currency currency = currencyService.getCurrency(currencyCode);
         return new CurrencyDTO(currency);
+    }
+
+    @PostMapping("api/currencies")
+    public void addCurrency(@RequestBody @Valid AddCurrencyRequest request) {
+        currencyService.createCurrency(request.getCurrencyCode());
     }
 }

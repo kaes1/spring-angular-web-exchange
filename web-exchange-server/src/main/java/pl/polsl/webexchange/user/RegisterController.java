@@ -31,7 +31,7 @@ public class RegisterController {
         if (userRepository.findByUsernameIgnoreCase(username).isPresent())
             throw new NotUniqueException("Username already taken");
 
-        User user = new User(email, username, passwordEncoder.encode(registrationRequest.getPassword()));
+        User user = new User(email, username, passwordEncoder.encode(registrationRequest.getPassword()), Role.ROLE_USER);
 
         userRepository.save(user);
         return ResponseEntity.ok().build();

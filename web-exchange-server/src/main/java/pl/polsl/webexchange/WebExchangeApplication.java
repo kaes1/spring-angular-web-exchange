@@ -6,43 +6,35 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import pl.polsl.webexchange.currency.Currency;
-import pl.polsl.webexchange.currency.CurrencyRepository;
-import pl.polsl.webexchange.currencyrate.CurrencyRate;
-import pl.polsl.webexchange.currencyrate.CurrencyRateRepository;
+import pl.polsl.webexchange.currency.CurrencyService;
+import pl.polsl.webexchange.user.Role;
 import pl.polsl.webexchange.user.User;
 import pl.polsl.webexchange.user.UserRepository;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @SpringBootApplication
 @EnableScheduling
 public class WebExchangeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WebExchangeApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WebExchangeApplication.class, args);
+    }
 
-	@Bean
-	ApplicationRunner init(CurrencyRepository currencyRepository,
-						   PasswordEncoder passwordEncoder,
-						   UserRepository userRepository,
-						   CurrencyRateRepository currencyRateRepository) {
-		return args -> {
+    @Bean
+    ApplicationRunner init(CurrencyService currencyService,
+                           PasswordEncoder passwordEncoder,
+                           UserRepository userRepository) {
+        return args -> {
 
-			User user = new User("aaa@mail.com", "aaa", passwordEncoder.encode("aaa"));
-			user = userRepository.save(user);
+            User admin = new User("admin@mail.com", "admin", passwordEncoder.encode("admin"), Role.ROLE_ADMIN);
+            admin = userRepository.save(admin);
 
-			Currency pln = new Currency("PLN");
-			Currency eur = new Currency("EUR");
-			Currency czk = new Currency("CZK");
-			pln = currencyRepository.save(pln);
-			eur = currencyRepository.save(eur);
-			czk = currencyRepository.save(czk);
+            User user = new User("aaa@mail.com", "aaa", passwordEncoder.encode("aaa"), Role.ROLE_USER);
+            user = userRepository.save(user);
 
-			currencyRepository.findAll().forEach(System.out::println);
-		};
-	}
+            currencyService.createCurrency("PLN");
+            currencyService.createCurrency("EUR");
+            currencyService.createCurrency("CZK");
+        };
+    }
 
 }
