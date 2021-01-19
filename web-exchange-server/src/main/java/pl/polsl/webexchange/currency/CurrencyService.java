@@ -17,8 +17,13 @@ public class CurrencyService {
                 .orElseThrow(() -> new NotFoundException("Currency " + currencyCode + " not found"));
     }
 
+
+    public List<Currency> getAllCurrencies() {
+        return currencyRepository.findAll();
+    }
+
+
     public List<Currency> getCurrenciesOtherThan(String currencyCode) {
         return currencyRepository.findAllByCurrencyCodeNotLike(currencyCode);
     }
-
 }

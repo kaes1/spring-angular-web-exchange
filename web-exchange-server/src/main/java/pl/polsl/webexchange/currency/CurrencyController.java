@@ -7,29 +7,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 public class CurrencyController {
 
-    private final CurrencyRepository currencyRepository;
-
+    private final CurrencyService currencyService;
 
     @GetMapping("api/currencies")
-    public Iterable<Currency> getCurrencies() {
-        return currencyRepository.findAll();
+    public List<CurrencyDTO> getCurrencies() {
+        return currencyService.getAllCurrencies().stream()
+                .map(CurrencyDTO::new)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("api/currencies/{currencyCode}")
-    public Currency getCurrency(@PathVariable String currencyCode) {
-        Optional<Currency> optionalCurrency = currencyRepository.findByCurrencyCode(currencyCode);
-        if (optionalCurrency.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "currency not found");
-        } else {
-            return optionalCurrency.get();
-        }
+    public CurrencyDTO getCurrency(@PathVariable String currencyCode) {
+        Currency currency = currencyService.getCurrency(currencyCode);
+        return new CurrencyDTO(currency);
     }
-
-
 }
