@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -9,15 +10,15 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  get<T>(path: string) {
-    return this.http.get<T>(path).pipe(
+  get<T>(path: string, params?: HttpParams): Observable<T> {
+    return this.http.get<T>(path, {params: params}).pipe(
       catchError(err => {
         throw err.error;
       })
     );
   }
 
-  post<T>(path: string, body: any) {
+  post<T>(path: string, body: any): Observable<T> {
     return this.http.post<T>(path, body).pipe(
       catchError(err => {
         throw err.error;

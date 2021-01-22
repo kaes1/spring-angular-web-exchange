@@ -10,6 +10,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { RegisterComponent } from './register/register.component';
+import { WalletComponent } from './wallet/wallet.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -21,7 +22,8 @@ export function tokenGetter() {
     HomeComponent,
     LoginComponent,
     NavMenuComponent,
-    RegisterComponent
+    RegisterComponent,
+    WalletComponent
   ],
   imports: [
     BrowserModule,

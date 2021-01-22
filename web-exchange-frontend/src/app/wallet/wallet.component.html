@@ -1,0 +1,24 @@
+<div class="center-content">
+  <h1>Wallet</h1>
+</div>
+
+<div class="center-content" style="display: flex; flex-wrap: wrap">
+  <div class="card" style="margin: 10px; flex:1 0 auto; width: 100%; max-width: 1300px;">
+    <div class="card-body">
+      <table *ngIf="userCurrencyBalanceList?.length > 0" class="table table-striped table-bordered ">
+        <thead>
+        <th class="text-center">Currency</th>
+        <th class="text-center">Amount</th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let currencyBalance of userCurrencyBalanceList; index as i">
+          <td class="text-center">{{currencyBalance.currencyCode}}</td>
+          <td class="text-center">{{currencyBalance.amount}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
