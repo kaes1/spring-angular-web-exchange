@@ -5,13 +5,15 @@ import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {WalletComponent} from './wallet/wallet.component';
 import {RegisterConfirmationComponent} from './register-confirmation/register-confirmation.component';
+import {UserNotLoggedInGuard} from './auth/user-not-logged-in.guard';
+import {UserLoggedInGuard} from './auth/user-logged-in.guard';
 
 const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent},
-  {path: 'wallet', component: WalletComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
+  {path: 'wallet', component: WalletComponent, canActivate: [UserLoggedInGuard]},
+  {path: 'login', component: LoginComponent, canActivate: [UserNotLoggedInGuard]},
+  {path: 'register', component: RegisterComponent, canActivate: [UserNotLoggedInGuard]},
   {path: 'register-confirmation/:token', component: RegisterConfirmationComponent},
   {path: '**', redirectTo: '/home'}
 
