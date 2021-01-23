@@ -2,42 +2,51 @@
 <h1>Register</h1>
 </div>
 
-<div class="center-content">
-<form #f="ngForm" (ngSubmit)="register()" style="width:100%; max-width: 600px;">
-  <div class="form-group">
-    <label for="emailInput">Email:</label>
-    <input id="emailInput" name="email" [(ngModel)]="email" #emailInput="ngModel"
-           type="text" class="form-control" required>
+<div class="center-content" *ngIf="!registerSuccess">
+  <form #f="ngForm" (ngSubmit)="register()" style="width:100%; max-width: 600px;">
+    <div class="form-group">
+      <label for="emailInput">Email:</label>
+      <input id="emailInput" name="email" [(ngModel)]="email" #emailInput="ngModel"
+             type="text" class="form-control" required [disabled]="inProgress">
 
-    <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="invalid-feedback d-block">
-      <div *ngIf="emailInput.errors?.required">Email is required</div>
+      <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="invalid-feedback d-block">
+        <div *ngIf="emailInput.errors?.required">Email is required</div>
+      </div>
+
     </div>
 
-  </div>
+    <div class="form-group">
+      <label for="usernameInput">Username:</label>
+      <input id="usernameInput" name="username" [(ngModel)]="username" #usernameInput="ngModel"
+             type="text" class="form-control" required [disabled]="inProgress">
 
-  <div class="form-group">
-    <label for="usernameInput">Username:</label>
-    <input id="usernameInput" name="username" [(ngModel)]="username" #usernameInput="ngModel"
-           type="text" class="form-control" required>
+      <div *ngIf="usernameInput.invalid && (usernameInput.dirty || usernameInput.touched)" class="invalid-feedback d-block">
+        <div *ngIf="usernameInput.errors?.required">Username is required</div>
+      </div>
 
-    <div *ngIf="usernameInput.invalid && (usernameInput.dirty || usernameInput.touched)" class="invalid-feedback d-block">
-      <div *ngIf="usernameInput.errors?.required">Username is required</div>
     </div>
 
-  </div>
+    <div class="form-group">
+      <label for="passwordInput">Password:</label>
+      <input id="passwordInput" name="password"  [(ngModel)]="password" #passwordInput="ngModel"
+             type="password" class="form-control" required [disabled]="inProgress">
 
-  <div class="form-group">
-    <label for="passwordInput">Password:</label>
-    <input id="passwordInput" name="password"  [(ngModel)]="password" #passwordInput="ngModel"
-           type="password" class="form-control" required>
-
-    <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="invalid-feedback d-block">
-      <div *ngIf="passwordInput.errors?.required">Password is required</div>
+      <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="invalid-feedback d-block">
+        <div *ngIf="passwordInput.errors?.required">Password is required</div>
+      </div>
     </div>
-  </div>
 
-  <button style="width:100%; max-width: 600px;" type="submit" class="btn btn-primary" [disabled]="!f.valid">Register</button>
+    <button style="width:100%; max-width: 600px;" type="submit" class="btn btn-primary" [disabled]="!f.valid || inProgress">
+      <span *ngIf="!inProgress">Register</span>
+      <span *ngIf="inProgress" class="spinner-border spinner-border-sm" role="status"></span>
+    </button>
+  </form>
+</div>
 
-  <p *ngIf="registerFailed" class="text-danger">{{registerFailedMessage}}</p>
-</form>
+<div class="center-content" style="margin-top: 20px" *ngIf="registerFailed">
+  <p class="text-danger">{{registerFailedMessage}}</p>
+</div>
+
+<div class="center-content" style="margin-top: 20px" *ngIf="registerSuccess">
+  <p class="text-success">Registration successful! Please check your email for the confirmation link.</p>
 </div>

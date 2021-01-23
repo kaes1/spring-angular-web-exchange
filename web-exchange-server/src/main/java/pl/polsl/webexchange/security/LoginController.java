@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -39,7 +40,12 @@ public class LoginController {
                     .sign(Algorithm.HMAC512("Secret"));
             return ResponseEntity.status(HttpStatus.OK)
                     .body(LoginResponse.success(user.getUsername(), token, user.getRole()));
-        } catch (AuthenticationException exception) {
+        }
+        catch (DisabledException disabledException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(LoginResponse.failed("Account is not activated. Please activate your account."));
+        }
+        catch (AuthenticationException exception) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(LoginResponse.failed("Invalid username or password"));
         }

@@ -30,7 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/api/login").permitAll()
-                .antMatchers("/api/register").permitAll()
+                .antMatchers("/api/register/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/currencies/**").permitAll()
                 .antMatchers("/api/currencyRates/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/currencies").hasAuthority(Role.ROLE_ADMIN.name())

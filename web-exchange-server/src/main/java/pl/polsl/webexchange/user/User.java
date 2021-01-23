@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.polsl.webexchange.operation.Operation;
 import pl.polsl.webexchange.usercurrencybalance.UserCurrencyBalance;
 
 import javax.persistence.*;
@@ -28,6 +27,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
     private String password;
+    private Boolean accountActivated;
 
     @OneToMany(mappedBy = "user")
     private List<UserCurrencyBalance> userCurrencies;
@@ -39,6 +39,11 @@ public class User implements UserDetails {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.accountActivated = false;
+    }
+
+    public void activateAccount() {
+        this.accountActivated = true;
     }
 
     @Override
@@ -73,6 +78,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return accountActivated;
     }
 }

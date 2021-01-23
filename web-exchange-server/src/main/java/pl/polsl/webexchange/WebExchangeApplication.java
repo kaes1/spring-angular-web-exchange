@@ -26,9 +26,11 @@ public class WebExchangeApplication {
         return args -> {
 
             User admin = new User("admin@mail.com", "admin", passwordEncoder.encode("admin"), Role.ROLE_ADMIN);
+            admin.activateAccount();
             admin = userRepository.save(admin);
 
             User user = new User("aaa@mail.com", "aaa", passwordEncoder.encode("aaa"), Role.ROLE_USER);
+            user.activateAccount();
             user = userRepository.save(user);
 
             currencyService.createCurrency("PLN");

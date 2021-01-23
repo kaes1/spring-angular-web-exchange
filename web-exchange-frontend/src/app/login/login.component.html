@@ -25,9 +25,10 @@
     </div>
 
     <button style="width:100%; max-width: 600px;" type="submit" class="btn btn-primary" [disabled]="!f.valid">Login</button>
-
-    <p *ngIf="loginFailed" class="text-danger">{{loginFailedMessage}}</p>
-
   </form>
+</div>
+
+<div class="center-content" style="margin-top: 20px" *ngIf="loginFailed">
+  <p class="text-danger">{{loginFailedMessage}}</p>
 </div>
 

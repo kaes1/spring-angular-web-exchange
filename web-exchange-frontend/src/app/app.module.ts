@@ -11,6 +11,7 @@ import {FormsModule} from '@angular/forms';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { RegisterComponent } from './register/register.component';
 import { WalletComponent } from './wallet/wallet.component';
+import { RegisterConfirmationComponent } from './register-confirmation/register-confirmation.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -23,7 +24,8 @@ export function tokenGetter() {
     LoginComponent,
     NavMenuComponent,
     RegisterComponent,
-    WalletComponent
+    WalletComponent,
+    RegisterConfirmationComponent
   ],
   imports: [
     BrowserModule,

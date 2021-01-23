@@ -1,0 +1,14 @@
+<div class="center-content">
+  <h1>Confirm Registration</h1>
+</div>
+
+<div class="center-content">
+  <p *ngIf="success" class="text-success">
+    Success! You can now
+    <a [routerLink]="['/login']" class="text-success font-weight-bold">Login!</a>
+
+  </p>
+  <p *ngIf="failed" class="text-danger">
+    Failed to confirm registration. Please check your confirmation link.
+  </p>
+</div>

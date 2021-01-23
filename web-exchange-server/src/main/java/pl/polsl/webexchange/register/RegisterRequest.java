@@ -1,4 +1,4 @@
-package pl.polsl.webexchange.user;
+package pl.polsl.webexchange.register;
 
 import lombok.Value;
 import org.hibernate.validator.constraints.Length;
