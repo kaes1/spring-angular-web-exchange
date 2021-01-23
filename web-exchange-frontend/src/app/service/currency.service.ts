@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {ApiService} from "../api/api.service";
-import {ApiEndpoints} from "../api/api-endpoints";
-import {Observable, ReplaySubject} from "rxjs";
-import {UserCurrencyBalanceModel} from "../model/user-currency-balance.model";
-import {LatestCurrencyRateList} from "../model/latest-currency-rate-list.model";
-import {HttpParams} from "@angular/common/http";
+import {ApiService} from '../api/api.service';
+import {ApiEndpoints} from '../api/api-endpoints';
+import {Observable, ReplaySubject} from 'rxjs';
+import {UserCurrencyBalanceModel} from '../model/user-currency-balance.model';
+import {LatestCurrencyRateList} from '../model/latest-currency-rate-list.model';
+import {HttpParams} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -35,10 +35,10 @@ export class CurrencyService {
   }
 
   public fetchLatestCurrencyRateList(baseCurrency?: HttpParams) {
-    this.apiService.get<LatestCurrencyRateList>(ApiEndpoints.LATEST_CURRENCY_RATE, baseCurrency).subscribe((latestCurrencyRateList: LatestCurrencyRateList) => {
+    this.apiService.get<LatestCurrencyRateList>(ApiEndpoints.CURRENCY_RATES_LATEST, baseCurrency).subscribe((latestCurrencyRateList: LatestCurrencyRateList) => {
       console.log(latestCurrencyRateList);
       this.latestCurrencyRateListSubject.next(latestCurrencyRateList);
-    })
+    });
   }
 
   public getWalletEntries() {

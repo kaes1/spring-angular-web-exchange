@@ -2,6 +2,17 @@ export class ApiEndpoints {
   public static readonly REGISTER = 'api/register';
   public static readonly REGISTER_CONFIRMATION = 'api/register/confirm';
   public static readonly LOGIN = 'api/login';
-  public static readonly USER_CURRENCY_BALANCE = '/api/userBalance';
-  public static readonly LATEST_CURRENCY_RATE = '/api/currencyRates/latest';
+
+  public static readonly CURRENCIES = 'api/currencies';
+  public static readonly CURRENCY_DETAILS = 'api/currencies/';
+  public static readonly ADMIN_ADD_CURRENCY = 'api/currencies';
+
+  public static readonly CURRENCY_RATES_LATEST = 'api/currencyRates/latest';
+  public static readonly CURRENCY_RATES_HISTORY = 'api/currencyRates/history';
+
+  public static readonly USER_CURRENCY_BALANCE = 'api/userBalance';
+
+  public static readonly OPERATIONS_ADD_FUNDS = 'api/operations/addFunds';
+  public static readonly OPERATIONS_TRADE_CURRENCY = 'api/operations/tradeCurrency';
+  public static readonly OPERATIONS_HISTORY = 'api/operations/history';
 }
