@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "../auth/auth.service";
-import {UserCurrencyBalanceModel} from "../model/user-currency-balance.model";
-import {CurrencyService} from "../service/currency.service";
-import {CurrencyRate} from "../model/currency-rate.model";
+import {AuthService} from '../auth/auth.service';
+import {CurrencyService} from '../service/currency.service';
+import {WalletEntry} from '../model/wallet-entry.model';
+import {combineLatest} from 'rxjs';
 
 @Component({
   selector: 'app-wallet',
@@ -12,8 +12,8 @@ import {CurrencyRate} from "../model/currency-rate.model";
 export class WalletComponent implements OnInit {
 
   isLoggedIn = false;
-  userCurrencyBalanceList: UserCurrencyBalanceModel[] = [];
-  latestCurrencyRateList: CurrencyRate[] = [];
+  userWalletEntries: WalletEntry[] = [];
+  baseCurrency: string = '';
 
   constructor(private authService: AuthService,
               private currencyService: CurrencyService) {
@@ -21,13 +21,32 @@ export class WalletComponent implements OnInit {
 
   ngOnInit() {
     this.authService.getLoggedIn().subscribe(loggedIn => this.isLoggedIn = loggedIn);
-    this.currencyService.getUserCurrencyBalanceList().subscribe(userCurrencyBalanceList => {
-      this.userCurrencyBalanceList = userCurrencyBalanceList;
-      console.log(userCurrencyBalanceList);
-    });
-    this.currencyService.getLatestCurrencyRateList().subscribe(latestCurrencyRateList => {
-      this.latestCurrencyRateList = latestCurrencyRateList.currencyRates;
-      console.log(latestCurrencyRateList);
-    });
+    this.getWalletEntries();
+  }
+
+  public getWalletEntries(){
+    combineLatest([this.currencyService.getLatestCurrencyRateList(), this.currencyService.getUserCurrencyBalanceList()]).subscribe(
+      ([latestCurrencyRateList, userCurrencyBalancelist]) => {
+        console.log(latestCurrencyRateList.currencyRates);
+        console.log(userCurrencyBalancelist);
+
+        this.userWalletEntries = [];
+        this.baseCurrency = latestCurrencyRateList.baseCurrencyCode;
+
+        for (let i = 0; i < latestCurrencyRateList.currencyRates.length; i++) {
+          for (let j = 0; j < userCurrencyBalancelist.length; j++) {
+            if (latestCurrencyRateList.currencyRates[i].targetCurrencyCode == userCurrencyBalancelist[j].currencyCode) {
+              let entry: WalletEntry = {
+                currencyCode: userCurrencyBalancelist[j].currencyCode,
+                rate: latestCurrencyRateList.currencyRates[i].rate,
+                amount: userCurrencyBalancelist[j].amount,
+              };
+              this.userWalletEntries.push(entry);
+            }
+          }
+        }
+        console.log(this.userWalletEntries);
+      }
+    );
   }
 }

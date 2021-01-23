@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '../api/api.service';
 import {ApiEndpoints} from '../api/api-endpoints';
-import {Observable, ReplaySubject} from 'rxjs';
+import {interval, Observable, ReplaySubject} from 'rxjs';
 import {UserCurrencyBalanceModel} from '../model/user-currency-balance.model';
 import {LatestCurrencyRateList} from '../model/latest-currency-rate-list.model';
 import {HttpParams} from '@angular/common/http';
@@ -17,6 +17,10 @@ export class CurrencyService {
   constructor(private apiService: ApiService) {
     this.fetchUserCurrencyBalanceList();
     this.fetchLatestCurrencyRateList();
+    const source = interval(10000);
+    source.subscribe(() => {
+      this.fetchLatestCurrencyRateList();
+    });
   }
 
   public getUserCurrencyBalanceList(): Observable<UserCurrencyBalanceModel[]> {
@@ -39,9 +43,5 @@ export class CurrencyService {
       console.log(latestCurrencyRateList);
       this.latestCurrencyRateListSubject.next(latestCurrencyRateList);
     });
-  }
-
-  public getWalletEntries() {
-
   }
 }

@@ -24,9 +24,7 @@
     <span class="text-light mx-2" *ngIf="loggedIn">Logged in as: {{username}}</span>
     <button class="btn btn-outline-light mx-2" [routerLink]="['/register']" *ngIf="!loggedIn">Register</button>
     <button class="btn btn-outline-light mx-2" [routerLink]="['/login']" *ngIf="!loggedIn">Login</button>
-    <button class="btn btn-outline-light mx-2" (click)="logout()" *ngIf="loggedIn">Logout</button>
+    <button class="btn btn-outline-light mx-2" (click)="logout()" [routerLink]="['/']" *ngIf="loggedIn">Logout</button>
 
   </div>
-
-
 </nav>

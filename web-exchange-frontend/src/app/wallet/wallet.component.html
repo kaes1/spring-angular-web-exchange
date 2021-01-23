@@ -3,20 +3,28 @@
 </div>
 
 <div class="center-content" style="display: flex; flex-wrap: wrap">
-  <div class="card" style="margin: 10px; flex:1 0 auto; width: 100%; max-width: 1300px;">
+  <div class="card" style="margin: 10px; flex:1 0 auto; width: 100%; max-width: 1000px;">
     <div class="card-body">
-<!--      <table *ngIf="userCurrencyBalanceList?.length > 0" class="table table-striped table-bordered ">-->
-<!--        <thead>-->
-<!--        <th class="text-center">Currency</th>-->
-<!--        <th class="text-center">Amount</th>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr *ngFor="let currencyBalance of userCurrencyBalanceList; index as i">-->
-<!--          <td class="text-center">{{currencyBalance.currencyCode}}</td>-->
-<!--          <td class="text-center">{{currencyBalance.amount}}</td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--      </table>-->
+      <table *ngIf="userWalletEntries.length > 0" class="table table-striped table-bordered">
+        <thead>
+        <th class="text-center">Currency</th>
+        <th class="text-center">Current Rate</th>
+        <th class="text-center">Owned Amount</th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let entry of userWalletEntries; index as i">
+          <td class="text-center">{{entry.currencyCode}}</td>
+          <td class="text-center">{{entry.rate | number:'1.4-4'}}</td>
+          <td class="text-center">{{entry.amount | number:'1.4-4'}}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div fxLayout="row">
+    <span fxFlex="60" style="margin-left: 10px; display: flex; align-items: center">
+      Presenting rates compared to {{baseCurrency}}
+    </span>
+      </div>
     </div>
   </div>
 </div>
