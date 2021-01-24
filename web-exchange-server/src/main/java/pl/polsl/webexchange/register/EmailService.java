@@ -26,8 +26,9 @@ public class EmailService {
 
         SimpleMailMessage emailMessage = new SimpleMailMessage();
         emailMessage.setTo(user.getEmail());
+        emailMessage.setFrom("webexchange.app@yahoo.com");
         emailMessage.setSubject("WebExchange Registration confirmation");
-        emailMessage.setText("To confirm your account, please click here : "
+        emailMessage.setText("To confirm your account, please click the link: "
                 + registerConfirmationUrl + confirmationToken.getToken());
         mailSender.send(emailMessage);
     }
