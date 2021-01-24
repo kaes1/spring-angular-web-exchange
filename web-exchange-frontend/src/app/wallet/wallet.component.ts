@@ -20,8 +20,13 @@ export class WalletComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.getLoggedIn().subscribe(loggedIn => this.isLoggedIn = loggedIn);
-    this.getWalletEntries();
+    this.authService.getLoggedIn().subscribe(loggedIn => {
+      this.isLoggedIn = loggedIn;
+      if(loggedIn) {
+        this.currencyService.fetchUserCurrencyBalanceList();
+        this.getWalletEntries();
+      }
+    });
   }
 
   public getWalletEntries(){

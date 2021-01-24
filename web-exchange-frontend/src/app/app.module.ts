@@ -8,12 +8,15 @@ import {LoginComponent} from './login/login.component';
 import {JwtModule} from '@auth0/angular-jwt';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { RegisterComponent } from './register/register.component';
-import { WalletComponent } from './wallet/wallet.component';
-import { RegisterConfirmationComponent } from './register-confirmation/register-confirmation.component';
-import { OperationHistoryComponent } from './operation-history/operation-history.component';
-import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import {NavMenuComponent} from './nav-menu/nav-menu.component';
+import {RegisterComponent} from './register/register.component';
+import {WalletComponent} from './wallet/wallet.component';
+import {RegisterConfirmationComponent} from './register-confirmation/register-confirmation.component';
+import {CurrencyRatesGraphComponent} from './currency-rates-graph/currency-rates-graph.component';
+import {OperationHistoryComponent} from './operation-history/operation-history.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {AdminPanelComponent} from './admin-panel/admin-panel.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -29,13 +32,17 @@ export function tokenGetter() {
     WalletComponent,
     RegisterConfirmationComponent,
     OperationHistoryComponent,
-    AdminPanelComponent
+    AdminPanelComponent,
+    CurrencyRatesGraphComponent,
+    OperationHistoryComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
+    NgxChartsModule,
     JwtModule.forRoot({
       config: {
         tokenGetter,
