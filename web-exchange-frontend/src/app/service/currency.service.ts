@@ -7,6 +7,8 @@ import {LatestCurrencyRateList} from '../model/latest-currency-rate-list.model';
 import {HttpParams} from '@angular/common/http';
 import {CurrencyRateHistory} from '../model/currency-rate-history.model';
 import {Currency} from '../model/currency.model';
+import {FunctionEnum} from '../model/function-enum.model';
+import {TradeCurrencyRequest} from '../model/trade-currency-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,16 +16,23 @@ import {Currency} from '../model/currency.model';
 export class CurrencyService {
 
   private userCurrencyBalanceListSubject = new ReplaySubject<UserCurrencyBalanceModel[]>(1);
-  private latestCurrencyRateListSubject = new ReplaySubject<LatestCurrencyRateList>(1);
+  private latestCurrencyRateListForWalletSubject = new ReplaySubject<LatestCurrencyRateList>(1);
+  private latestCurrencyRateListForTradeSubject = new ReplaySubject<LatestCurrencyRateList>(1);
   private currencyRateHistorySubject = new ReplaySubject<CurrencyRateHistory>(1);
   private currenciesSubject = new ReplaySubject<Currency[]>(1);
 
+  userBaseCurrency = 'CZK';
+
   constructor(private apiService: ApiService) {
     this.fetchCurrencies();
-    this.fetchLatestCurrencyRateList();
+
+    let params = new HttpParams();
+    params = params.append('baseCurrencyCode', this.userBaseCurrency);
+
+    this.fetchLatestCurrencyRateList(FunctionEnum.wallet, params);
     const source = interval(10000);
     source.subscribe(() => {
-      this.fetchLatestCurrencyRateList();
+      this.fetchLatestCurrencyRateList(FunctionEnum.wallet, params);
     });
   }
 
@@ -38,14 +47,21 @@ export class CurrencyService {
     });
   }
 
-  public getLatestCurrencyRateList(): Observable<LatestCurrencyRateList> {
-    return this.latestCurrencyRateListSubject.asObservable();
+  public getLatestCurrencyRateList(func: FunctionEnum): Observable<LatestCurrencyRateList> {
+    if (func == FunctionEnum.wallet)
+      return this.latestCurrencyRateListForWalletSubject.asObservable();
+    else
+      return this.latestCurrencyRateListForTradeSubject.asObservable();
+
   }
 
-  public fetchLatestCurrencyRateList(baseCurrency?: HttpParams) {
+  public fetchLatestCurrencyRateList(func: FunctionEnum, baseCurrency: HttpParams) {
     this.apiService.get<LatestCurrencyRateList>(ApiEndpoints.CURRENCY_RATES_LATEST, baseCurrency).subscribe((latestCurrencyRateList: LatestCurrencyRateList) => {
       console.log(latestCurrencyRateList);
-      this.latestCurrencyRateListSubject.next(latestCurrencyRateList);
+      if (func == FunctionEnum.wallet)
+        this.latestCurrencyRateListForWalletSubject.next(latestCurrencyRateList);
+      else if (func == FunctionEnum.tradeCurrency)
+        this.latestCurrencyRateListForTradeSubject.next(latestCurrencyRateList);
     });
   }
 
@@ -53,7 +69,7 @@ export class CurrencyService {
     return this.currencyRateHistorySubject.asObservable();
   }
 
-  public fetchCurrencyRateHistory(params?: HttpParams) {
+  public fetchCurrencyRateHistory(params: HttpParams) {
     this.apiService.get<CurrencyRateHistory>(ApiEndpoints.CURRENCY_RATES_HISTORY, params).subscribe((currencyRateHistory: CurrencyRateHistory) => {
       console.log(currencyRateHistory);
       this.currencyRateHistorySubject.next(currencyRateHistory);
@@ -68,6 +84,18 @@ export class CurrencyService {
     this.apiService.get<Currency[]>(ApiEndpoints.CURRENCIES).subscribe((currencies: Currency[]) => {
       console.log(currencies);
       this.currenciesSubject.next(currencies);
+    });
+  }
+
+  public tradeCurrency(model: TradeCurrencyRequest) {
+    return new Observable(observer => {
+      this.apiService.post(ApiEndpoints.OPERATIONS_TRADE_CURRENCY, model)
+        .subscribe(result => {
+          this.fetchUserCurrencyBalanceList();
+          observer.next('Success');
+        }, error => {
+          observer.error(error.error);
+        });
     });
   }
 

@@ -23,7 +23,6 @@ export class CurrencyRatesGraphComponent implements OnInit {
     this.currencyService.getCurrencies().subscribe(currencies => {
       this.currencies = currencies;
     });
-
   }
 
   fetchGraph(baseCurrency: string, targetCurrency: string, from: string, to: string) {
