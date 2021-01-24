@@ -1,3 +1,9 @@
+registerConfirmationUrl: "http://localhost:4200/register-confirmation/"
+admin:
+  email: admin@email.com
+  username: admin
+  password: admin
+
 spring:
   datasource:
     url: "jdbc:postgresql://localhost:5432/webexchange"
@@ -8,12 +14,11 @@ spring:
     hibernate:
       ddl-auto: create
   mail:
-    host: smtp.gmail.com
+    host: smtp.mail.yahoo.com
     port: 587
-    username: webexchange.app@gmail.com
-    password: $WebExchange123
+    username: "webexchange.app@yahoo.com"
+    password: "zqhrdvjgliedddsc" # Regular browser password is: Zaq1@wsx
     properties.mail.smtp:
       auth: true
       starttls.enable: true
-
-registerConfirmationUrl: "http://localhost:4200/register-confirmation/"
+      starttls.required: true
