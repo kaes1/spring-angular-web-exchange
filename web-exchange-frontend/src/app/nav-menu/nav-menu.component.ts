@@ -9,6 +9,7 @@ import {AuthService} from '../auth/auth.service';
 export class NavMenuComponent implements OnInit {
 
   loggedIn = false;
+  isAdmin = false;
   username = '';
 
   constructor(private authService: AuthService) { }
@@ -16,6 +17,7 @@ export class NavMenuComponent implements OnInit {
   ngOnInit(): void {
     this.authService.getLoggedIn().subscribe(loggedIn => this.loggedIn = loggedIn);
     this.authService.getUsername().subscribe(username => this.username = username);
+    this.authService.getRole().subscribe(role => this.isAdmin = role === 'ROLE_ADMIN');
   }
 
   logout() {

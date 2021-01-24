@@ -33,9 +33,9 @@ public class WebExchangeApplication {
             user.activateAccount();
             user = userRepository.save(user);
 
-            currencyService.createCurrency("PLN");
-            currencyService.createCurrency("EUR");
-            currencyService.createCurrency("CZK");
+            currencyService.activateCurrency("PLN");
+            currencyService.activateCurrency("EUR");
+            currencyService.activateCurrency("CZK");
         };
     }
 

@@ -6,7 +6,7 @@ import {JwtHelperService} from '@auth0/angular-jwt';
 @Injectable({
   providedIn: 'root'
 })
-export class UserNotLoggedInGuard implements CanActivate {
+export class NotLoggedInGuard implements CanActivate {
 
   constructor(private jwtHelper: JwtHelperService,
               private router: Router) {

@@ -33,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/register/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/currencies/**").permitAll()
                 .antMatchers("/api/currencyRates/**").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/currencies").hasAuthority(Role.ROLE_ADMIN.name())
+                .antMatchers("/api/currencies/configuration").hasAuthority(Role.ROLE_ADMIN.name())
                 .antMatchers("/api/**").hasAuthority(Role.ROLE_USER.name())
                 .anyRequest().permitAll()
                 .and()

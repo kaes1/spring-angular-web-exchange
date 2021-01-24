@@ -16,23 +16,14 @@ public class CurrencyRateUpdater {
 
     private final CurrencyRepository currencyRepository;
     private final CurrencyRateRepository currencyRateRepository;
-
-    public boolean isValidCurrencyCode(String currencyCode) {
-        try {
-            ExchangeRateApiModel currencyRatesFromApi = getCurrencyRatesFromApi(currencyCode);
-            return currencyRatesFromApi.getRates().size() > 0;
-        } catch (HttpClientErrorException exception) {
-            return false;
-        }
-    }
+    private final ExchangeRateApiService exchangeRateApiService;
 
     @Scheduled(cron = "0 * * * * *")
     private void updateCurrencyRates() {
-
         LocalDateTime date = LocalDateTime.now();
         System.out.println("Updating currency rates now! " + date);
         currencyRepository.findAll().forEach(baseCurrency -> {
-            ExchangeRateApiModel exchangeRateApiResponse = getCurrencyRatesFromApi(baseCurrency.getCurrencyCode());
+            ExchangeRateApiModel exchangeRateApiResponse = exchangeRateApiService.getCurrencyRatesFromApi(baseCurrency.getCurrencyCode());
             exchangeRateApiResponse.getRates().forEach((currencyCode, rate) -> {
                 currencyRepository.findByCurrencyCode(currencyCode).ifPresent(targetCurrency -> {
                     // We modify currency rates by 5% to simulate rates changing.
@@ -42,12 +33,6 @@ public class CurrencyRateUpdater {
                 });
             });
         });
-    }
-
-    private ExchangeRateApiModel getCurrencyRatesFromApi(String currencyCode) {
-        final String uri = "https://api.exchangeratesapi.io/latest?base=" + currencyCode;
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject(uri, ExchangeRateApiModel.class);
     }
 
     private BigDecimal modifyRate(BigDecimal rate) {

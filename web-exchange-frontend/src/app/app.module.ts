@@ -13,6 +13,7 @@ import { RegisterComponent } from './register/register.component';
 import { WalletComponent } from './wallet/wallet.component';
 import { RegisterConfirmationComponent } from './register-confirmation/register-confirmation.component';
 import { OperationHistoryComponent } from './operation-history/operation-history.component';
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -27,7 +28,8 @@ export function tokenGetter() {
     RegisterComponent,
     WalletComponent,
     RegisterConfirmationComponent,
-    OperationHistoryComponent
+    OperationHistoryComponent,
+    AdminPanelComponent
   ],
   imports: [
     BrowserModule,

@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
-public class AddCurrencyRequest {
+public class ActivateCurrencyRequest {
     @NotBlank
     @Size(min = 3, max = 3)
     String currencyCode;

@@ -6,7 +6,7 @@ import {JwtHelperService} from '@auth0/angular-jwt';
 @Injectable({
   providedIn: 'root'
 })
-export class UserLoggedInGuard implements CanActivate {
+export class AdminLoggedInGuard implements CanActivate {
 
   constructor(private jwtHelper: JwtHelperService,
               private router: Router) {
@@ -23,7 +23,7 @@ export class UserLoggedInGuard implements CanActivate {
       return false;
     }
 
-    if (role !== 'ROLE_USER') {
+    if (role !== 'ROLE_ADMIN') {
       this.router.navigate(['home']);
       return false;
     }

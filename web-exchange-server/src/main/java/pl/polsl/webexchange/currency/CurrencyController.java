@@ -1,14 +1,13 @@
 package pl.polsl.webexchange.currency;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.webexchange.currencyrate.ExchangeRateApiService;
 
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 public class CurrencyController {
 
     private final CurrencyService currencyService;
+    private final ExchangeRateApiService exchangeRateApiService;
 
     @GetMapping("api/currencies")
     public List<CurrencyDTO> getCurrencies() {
@@ -30,13 +30,16 @@ public class CurrencyController {
         return new CurrencyDTO(currency);
     }
 
-    @PostMapping("api/currencies")
-    public void addCurrency(@RequestBody @Valid AddCurrencyRequest request) {
-        currencyService.createCurrency(request.getCurrencyCode());
+    @GetMapping("api/currencies/configuration")
+    public List<CurrencyConfigurationDTO> getCurrencyConfiguration() {
+        List<String> allValidCurrencyCodes = exchangeRateApiService.getAllValidCurrencyCodes();
+        return allValidCurrencyCodes.stream()
+                .map(code -> new CurrencyConfigurationDTO(code, currencyService.isActive(code)))
+                .collect(Collectors.toList());
     }
 
-    public List<String> getValidCurrencies() {
-        return Arrays.asList("CZK", "HUF");
+    @PostMapping("api/currencies/configuration")
+    public void activateCurrency(@RequestBody @Valid ActivateCurrencyRequest request) {
+        currencyService.activateCurrency(request.getCurrencyCode());
     }
-
 }

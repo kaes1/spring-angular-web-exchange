@@ -1,0 +1,26 @@
+<div class="center-content">
+  <h1>Admin options</h1>
+</div>
+
+<div class="center-content">
+  <table class="table table-striped table-bordered" style="max-width: 1000px;">
+    <thead>
+      <tr>
+        <th>Currency</th>
+        <th>Active</th>
+      </tr>
+    </thead>
+    <tbody >
+    <tr *ngFor="let config of currencyConfigurationList; index as i">
+      <td>{{config.currencyCode}}</td>
+      <td>
+        <button *ngIf="!config.active" (click)="activateCurrency(config.currencyCode)"
+         class="btn btn-secondary btn-sm">
+          Activate
+        </button>
+        <span *ngIf="config.active"> Activated </span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

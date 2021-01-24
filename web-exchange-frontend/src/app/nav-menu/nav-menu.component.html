@@ -13,11 +13,14 @@
       <li class="nav-item">
         <a class="nav-link text-light" [routerLink]="['/']">Home</a>
       </li >
-      <li class="nav-item" *ngIf="loggedIn">
+      <li class="nav-item" *ngIf="loggedIn && !isAdmin">
         <a class="nav-link text-light" [routerLink]="['/wallet']">Wallet</a>
       </li>
-      <li class="nav-item" *ngIf="loggedIn">
+      <li class="nav-item" *ngIf="loggedIn && !isAdmin">
         <a class="nav-link text-light" [routerLink]="['/operation-history']">Operation History</a>
+      </li>
+      <li class="nav-item" *ngIf="loggedIn && isAdmin">
+        <a class="nav-link text-light" [routerLink]="['/admin-panel']">Admin Panel</a>
       </li>
     </ul>
 
