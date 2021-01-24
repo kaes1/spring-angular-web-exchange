@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Value
 public class OperationHistory {
+    Long id;
     LocalDateTime dateTime;
     String operationMessage;
 }

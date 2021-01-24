@@ -36,6 +36,7 @@ public class AddFundsOperation extends Operation {
     @Override
     public OperationHistory toOperationHistory() {
         return new OperationHistory(
+                this.getId(),
                 this.getDateTime(),
                 String.format(Locale.ROOT, "Added %.4f %s", amount, currency.getCurrencyCode())
         );

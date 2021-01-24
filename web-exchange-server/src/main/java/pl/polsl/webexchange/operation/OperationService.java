@@ -24,6 +24,7 @@ import pl.polsl.webexchange.usercurrencybalance.UserCurrencyBalanceService;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,8 +88,12 @@ public class OperationService {
                 .collect(Collectors.toList());
     }
 
-    public List<OperationHistory> getOperationHistory(User user, LocalDateTime from, LocalDateTime to)  {
-        List<Operation> operations = operationRepository.findAllByUserAndDateTimeBetweenOrderByDateTimeDesc(user, from, to);
+    public List<OperationHistory> getOperationHistory(User user, LocalDate from, LocalDate to)  {
+
+        LocalDateTime fromDateTime = from.atStartOfDay();
+        LocalDateTime toDateTime = to.plusDays(1).atStartOfDay();
+
+        List<Operation> operations = operationRepository.findAllByUserAndDateTimeBetweenOrderByDateTimeDesc(user, fromDateTime, toDateTime);
         return operations.stream()
                 .map(Operation::toOperationHistory)
                 .collect(Collectors.toList());

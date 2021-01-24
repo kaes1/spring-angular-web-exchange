@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,4 +34,9 @@ public class CurrencyController {
     public void addCurrency(@RequestBody @Valid AddCurrencyRequest request) {
         currencyService.createCurrency(request.getCurrencyCode());
     }
+
+    public List<String> getValidCurrencies() {
+        return Arrays.asList("CZK", "HUF");
+    }
+
 }

@@ -48,6 +48,7 @@ public class TradeCurrencyOperation extends Operation {
     @Override
     public OperationHistory toOperationHistory() {
         return new OperationHistory(
+                this.getId(),
                 this.getDateTime(),
                 String.format(Locale.ROOT, "Bought %.4f %s for %.4f %s", boughtAmount, boughtCurrency.getCurrencyCode(), soldAmount, soldCurrency.getCurrencyCode())
         );

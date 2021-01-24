@@ -11,6 +11,7 @@ import pl.polsl.webexchange.operation.tradecurrency.TradeCurrencyRequest;
 import pl.polsl.webexchange.operation.tradecurrency.TradeCurrencyResponse;
 import pl.polsl.webexchange.user.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,25 +36,10 @@ public class OperationController {
         return operationService.getOperationHistory(user);
     }
 
-//    @GetMapping(value = "api/operations/history", params = {"from"})
-//    public List<OperationHistory> getOperationHistoryFrom(@AuthenticationPrincipal User user,
-//                                                      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from) {
-//        LocalDateTime to = LocalDate.now().plusDays(1).atStartOfDay();
-//        return operationService.getOperationHistory(user, from, to);
-//    }
-//
-//    @GetMapping(value = "api/operations/history", params = {"to"})
-//    public List<OperationHistory> getOperationHistoryTo(@AuthenticationPrincipal User user,
-//                                                      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
-//
-//        LocalDateTime from = to.minusDays(10);
-//        return operationService.getOperationHistory(user, from, to);
-//    }
-
     @GetMapping(value = "api/operations/history", params = {"from", "to"})
     public List<OperationHistory> getOperationHistoryBetween(@AuthenticationPrincipal User user,
-                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
-                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
+                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
         return operationService.getOperationHistory(user, from, to);
     }
 }
