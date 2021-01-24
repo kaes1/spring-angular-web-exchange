@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import pl.polsl.webexchange.errorhandling.LoginFailedException;
 import pl.polsl.webexchange.user.User;
 import pl.polsl.webexchange.user.UserRepository;
 
@@ -42,12 +43,10 @@ public class LoginController {
                     .body(LoginResponse.success(user.getUsername(), token, user.getRole()));
         }
         catch (DisabledException disabledException) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(LoginResponse.failed("Account is not activated. Please activate your account."));
+            throw new LoginFailedException("Account is not activated. Please activate your account.");
         }
         catch (AuthenticationException exception) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(LoginResponse.failed("Invalid username or password"));
+            throw new LoginFailedException("Invalid username or password");
         }
     }
 }

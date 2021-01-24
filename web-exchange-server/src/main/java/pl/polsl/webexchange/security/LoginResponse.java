@@ -11,10 +11,6 @@ public class LoginResponse {
     String token;
     String role;
 
-    public static LoginResponse failed(String errorMessage) {
-        return new LoginResponse(false, errorMessage, null, null, null);
-    }
-
     public static LoginResponse success(String username, String token, Role role) {
         return new LoginResponse(true, "Login successful", username, token, role.name());
     }

@@ -17,6 +17,19 @@ import java.util.Date;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(LoginFailedException.class)
+    protected ResponseEntity<Object> handleLoginFailedException(LoginFailedException ex, WebRequest request) {
+        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(new Date())
+                .status(httpStatus.value())
+                .error(httpStatus.getReasonPhrase())
+                .message(ex.getMessage())
+                .path(((ServletWebRequest) request).getRequest().getRequestURI())
+                .build();
+        return super.handleExceptionInternal(ex, error, new HttpHeaders(), httpStatus, request);
+    }
+
     @ExceptionHandler(NotFoundException.class)
     protected ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
