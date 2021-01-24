@@ -25,14 +25,12 @@ public class CurrencyRateController {
     @GetMapping("api/currencyRates/history")
     public ResponseEntity<CurrencyRatesHistoryResponse> getHistoricalCurrencyRates(
             @RequestParam(defaultValue = "EUR") String baseCurrencyCode,
-            @RequestParam(required = false) String targetCurrencyCode,
+            @RequestParam String targetCurrencyCode,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to
     ) {
         Currency baseCurrency = currencyService.getCurrency(baseCurrencyCode);
-        List<Currency> targetCurrencies = targetCurrencyCode != null
-                ? Collections.singletonList(currencyService.getCurrency(targetCurrencyCode))
-                : currencyService.getCurrenciesOtherThan(baseCurrencyCode);
+        Currency targetCurrency = currencyService.getCurrency(targetCurrencyCode);
 
         LocalDateTime fromDate = from != null
                 ? from
@@ -41,16 +39,17 @@ public class CurrencyRateController {
         LocalDateTime toDate = to != null
                 ? to
                 : LocalDate.now().plusDays(1).atStartOfDay();
+        
+        List<CurrencyRate> currencyRates = currencyRateService.getCurrencyRatesBetween(baseCurrency, targetCurrency, fromDate, toDate);
+        List<CurrencyRateDTO> currencyRateDTOs = toDTOs(currencyRates);
 
-        List<CurrencyRatesHistoryDTO> historyDTOs = targetCurrencies.stream()
-                .map(targetCurrency -> {
-                    List<CurrencyRate> currencyRates = currencyRateService.getCurrencyRatesBetween(baseCurrency, targetCurrency, fromDate, toDate);
-                    List<CurrencyRateDTO> currencyRateDTOs = toDTOs(currencyRates);
-                    return new CurrencyRatesHistoryDTO(targetCurrency.getCurrencyCode(), currencyRateDTOs);
-                })
-                .collect(Collectors.toList());
+        CurrencyRatesHistoryResponse response = new CurrencyRatesHistoryResponse(
+                baseCurrency.getCurrencyCode(),
+                targetCurrency.getCurrencyCode(),
+                fromDate, toDate, currencyRateDTOs
+        );
 
-        return ResponseEntity.ok(new CurrencyRatesHistoryResponse(baseCurrency.getCurrencyCode(), fromDate, toDate, historyDTOs));
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("api/currencyRates/latest")
