@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ApiService} from '../api/api.service';
 import {ApiEndpoints} from '../api/api-endpoints';
 import {HttpParams} from '@angular/common/http';
@@ -19,7 +19,8 @@ export class OperationHistoryComponent implements OnInit {
   operationHistoryList: OperationHistory[] = [];
 
   constructor(private apiService: ApiService,
-              private datePipe: DatePipe) { }
+              private datePipe: DatePipe) {
+  }
 
   ngOnInit(): void {
     const currentDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd') as string;
