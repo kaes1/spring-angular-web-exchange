@@ -3,6 +3,9 @@ import {AuthService} from '../auth/auth.service';
 import {CurrencyService} from '../service/currency.service';
 import {WalletEntry} from '../model/wallet-entry.model';
 import {combineLatest} from 'rxjs';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {TradeCurrencyComponent} from '../trade-currency/trade-currency.component';
+import {FunctionEnum} from '../model/function-enum.model';
 
 @Component({
   selector: 'app-wallet',
@@ -14,23 +17,25 @@ export class WalletComponent implements OnInit {
   isLoggedIn = false;
   userWalletEntries: WalletEntry[] = [];
   baseCurrency: string = '';
+  availableFunds: number = 0;
 
   constructor(private authService: AuthService,
-              private currencyService: CurrencyService) {
+              private currencyService: CurrencyService,
+              private modalService: NgbModal) {
   }
 
   ngOnInit() {
     this.authService.getLoggedIn().subscribe(loggedIn => {
       this.isLoggedIn = loggedIn;
-      if(loggedIn) {
+      if (loggedIn) {
         this.currencyService.fetchUserCurrencyBalanceList();
         this.getWalletEntries();
       }
     });
   }
 
-  public getWalletEntries(){
-    combineLatest([this.currencyService.getLatestCurrencyRateList(), this.currencyService.getUserCurrencyBalanceList()]).subscribe(
+  public getWalletEntries() {
+    combineLatest([this.currencyService.getLatestCurrencyRateList(FunctionEnum.wallet), this.currencyService.getUserCurrencyBalanceList()]).subscribe(
       ([latestCurrencyRateList, userCurrencyBalancelist]) => {
         console.log(latestCurrencyRateList.currencyRates);
         console.log(userCurrencyBalancelist);
@@ -54,4 +59,9 @@ export class WalletComponent implements OnInit {
       }
     );
   }
+
+  tradeCurrency() {
+    this.modalService.open(TradeCurrencyComponent, {centered: true});
+  }
+
 }

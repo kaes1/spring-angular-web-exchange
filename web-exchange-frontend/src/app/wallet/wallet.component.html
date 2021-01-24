@@ -20,11 +20,20 @@
         </tbody>
       </table>
 
-      <span style="margin-left: 10px;">
-      Presenting rates compared to {{baseCurrency}}
-    </span>
+
+      <div class="row">
+        <div class="col">
+          <div class="row" style="margin-left: 10px;">Presenting rates compared to {{baseCurrency}}</div>
+          <div class="row" style="margin-left: 10px;">Available funds: {{availableFunds}} {{baseCurrency}}</div>
+        </div>
+        <div style="margin-right: 15px; margin-top: 5px;">
+          <button class="btn btn-primary" style="width:200px; margin-right: 20px;" (click)="tradeCurrency()">Trade
+            Currency
+          </button>
+          <button class="btn btn-primary" style="width:200px;">Add Funds</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
-
-
