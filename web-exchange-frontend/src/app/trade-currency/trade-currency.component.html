@@ -25,7 +25,7 @@
             </div>
           </div>
           <div *ngIf="(soldCurrency.dirty || soldCurrency.touched)" class="invalid-feedback d-block">
-            <div *ngIf="soldCurrency.invalid && soldCurrency.errors.required"> Sold currency is required</div>
+            <div *ngIf="soldCurrency.invalid && soldCurrency.errors?.required"> Sold currency is required</div>
           </div>
         </div>
 
@@ -41,8 +41,8 @@
             </div>
           </div>
           <div *ngIf="(quantity.dirty || quantity.touched)" class="invalid-feedback d-block">
-            <div *ngIf="quantity.invalid && quantity.errors.required"> Quantity is required</div>
-            <div *ngIf="quantity.invalid && quantity.errors.pattern"> Only whole numbers allowed</div>
+            <div *ngIf="quantity.invalid && quantity.errors?.required"> Quantity is required</div>
+            <div *ngIf="quantity.invalid && quantity.errors?.pattern"> Only whole numbers allowed</div>
             <div *ngIf="quantity.value <= 0"> Only numbers greater than 0 allowed</div>
             <!--          <div *ngIf="model.quantity * model.transactionBaseQuantity / currencyModel.currencyRate > availableBaseCurrency"> Not enough {{baseCurrency}} </div>-->
           </div>
@@ -66,7 +66,7 @@
             </div>
           </div>
           <div *ngIf="(boughtCurrency.dirty || boughtCurrency.touched)" class="invalid-feedback d-block">
-            <div *ngIf="boughtCurrency.invalid && boughtCurrency.errors.required"> Bought currency is required</div>
+            <div *ngIf="boughtCurrency.invalid && boughtCurrency.errors?.required"> Bought currency is required</div>
             <div *ngIf="soldCurrency.value == boughtCurrency.value"> Sold currency and bought currency must be different
             </div>
           </div>
@@ -85,7 +85,6 @@
         </div>
 
       </div>
-
 
       <p *ngIf="failed" class="text-danger">{{failedMessage}}</p>
     </form>
