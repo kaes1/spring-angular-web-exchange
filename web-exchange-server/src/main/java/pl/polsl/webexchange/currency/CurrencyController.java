@@ -24,12 +24,6 @@ public class CurrencyController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("api/currencies/{currencyCode}")
-    public CurrencyDTO getCurrency(@PathVariable String currencyCode) {
-        Currency currency = currencyService.getCurrency(currencyCode);
-        return new CurrencyDTO(currency);
-    }
-
     @GetMapping("api/currencies/configuration")
     public List<CurrencyConfigurationDTO> getCurrencyConfiguration() {
         List<String> allValidCurrencyCodes = exchangeRateApiService.getAllValidCurrencyCodes();
