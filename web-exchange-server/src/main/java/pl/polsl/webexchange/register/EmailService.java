@@ -13,7 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmailService {
 
-    @Value("${registerConfirmationUrl}")
+    @Value("${webexchange.registerConfirmationUrl}")
     private String registerConfirmationUrl;
 
     private final JavaMailSender mailSender;

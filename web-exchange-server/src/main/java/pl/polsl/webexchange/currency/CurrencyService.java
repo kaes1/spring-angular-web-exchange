@@ -21,6 +21,7 @@ public class CurrencyService {
 
     private final CurrencyRepository currencyRepository;
     private final ExchangeRateApiService exchangeRateApiService;
+    private final CurrencyRateUpdater currencyRateUpdater;
 
     public void activateCurrency(String currencyCode) {
         String uppercaseCurrencyCode = currencyCode.toUpperCase();
@@ -36,7 +37,8 @@ public class CurrencyService {
         }
 
         Currency currency = new Currency(uppercaseCurrencyCode);
-        currencyRepository.save(currency);
+        currency = currencyRepository.save(currency);
+        currencyRateUpdater.updateCurrencyRates(currency);
     }
 
     public Currency getCurrency(String currencyCode) throws NotFoundException {

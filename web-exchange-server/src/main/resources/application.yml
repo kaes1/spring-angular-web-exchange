@@ -1,8 +1,13 @@
-registerConfirmationUrl: "http://localhost:4200/register-confirmation/"
-admin:
-  email: admin@email.com
-  username: admin
-  password: admin
+webexchange:
+  registerConfirmationUrl: "http://localhost:4200/register-confirmation/"
+  init:
+    currencies: EUR, PLN, CZK, CAD, USD
+    admin:
+      email: admin@email.com
+      username: admin
+      password: admin
+
+
 
 spring:
   datasource:

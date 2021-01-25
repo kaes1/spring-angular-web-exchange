@@ -7,9 +7,11 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.polsl.webexchange.currency.CurrencyService;
+import pl.polsl.webexchange.currencyrate.CurrencyRateUpdater;
 import pl.polsl.webexchange.user.Role;
 import pl.polsl.webexchange.user.User;
 import pl.polsl.webexchange.user.UserRepository;
+
 
 @Component
 @RequiredArgsConstructor
@@ -18,13 +20,16 @@ public class DataInitializer implements ApplicationRunner {
     private final CurrencyService currencyService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final CurrencyRateUpdater currencyRateUpdater;
 
-    @Value("${admin.email}")
+    @Value("${webexchange.init.admin.email}")
     private String adminEmail;
-    @Value("${admin.username}")
+    @Value("${webexchange.init.admin.username}")
     private String adminUsername;
-    @Value("${admin.password}")
+    @Value("${webexchange.init.admin.password}")
     private String adminPassword;
+    @Value("${webexchange.init.currencies}")
+    private String[] initialCurrencies;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -36,8 +41,10 @@ public class DataInitializer implements ApplicationRunner {
         user.activateAccount();
         user = userRepository.save(user);
 
-        currencyService.activateCurrency("PLN");
-        currencyService.activateCurrency("EUR");
-        currencyService.activateCurrency("CZK");
+        for (String currencyCode : initialCurrencies) {
+            currencyService.activateCurrency(currencyCode);
+        }
+
+        this.currencyRateUpdater.updateCurrencyRates();
     }
 }
