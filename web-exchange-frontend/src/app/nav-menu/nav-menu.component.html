@@ -27,7 +27,7 @@
 
 
     <span class="text-light mx-2" *ngIf="loggedIn">Logged in as: {{username}}</span>
-    <div class="nav-item">
+    <div class="nav-item mx-2">
       <select class="form-control bg-dark text-light" id="baseCurrencyInput" name="currency"
               (change)="onCurrencySelected()"
               [(ngModel)]="baseCurrency">

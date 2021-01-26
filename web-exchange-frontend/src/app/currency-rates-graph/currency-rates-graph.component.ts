@@ -41,4 +41,28 @@ export class CurrencyRatesGraphComponent implements OnInit {
     });
   }
 
+  onBaseCurrencySelected() {
+    if (this.selectedParams.baseCurrency == this.selectedParams.targetCurrency) {
+      this.selectedParams.targetCurrency = '';
+    }
+  }
+
+  onTargetCurrencySelected() {
+    if (this.selectedParams.baseCurrency == this.selectedParams.targetCurrency) {
+      this.selectedParams.baseCurrency = '';
+    }
+  }
+
+  onFromSelected() {
+    if (this.selectedParams.from >= this.selectedParams.to) {
+      this.selectedParams.to = '';
+    }
+  }
+
+  onToSelected() {
+    if (this.selectedParams.from >= this.selectedParams.to) {
+      this.selectedParams.from = '';
+    }
+  }
+
 }
