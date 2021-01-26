@@ -34,9 +34,6 @@ export class WalletComponent implements OnInit {
   public getWalletEntries() {
     combineLatest([this.currencyService.getLatestCurrencyRateList(), this.currencyService.getUserCurrencyBalanceList()]).subscribe(
       ([latestCurrencyRateList, userCurrencyBalancelist]) => {
-        console.log(latestCurrencyRateList.currencyRates);
-        console.log(userCurrencyBalancelist);
-
         this.userWalletEntries = [];
         let userFunds = userCurrencyBalancelist.find(element => element.currencyCode == this.baseCurrency)?.amount;
         this.availableFunds = userFunds || 0;
@@ -53,7 +50,6 @@ export class WalletComponent implements OnInit {
             }
           }
         }
-        console.log(this.userWalletEntries);
       }
     );
   }

@@ -20,18 +20,23 @@
       <li class="nav-item" *ngIf="loggedIn && !isAdmin">
         <a class="nav-link text-light" [routerLink]="['/operation-history']">Operation History</a>
       </li>
-      <li class="nav-item" *ngIf="loggedIn && !isAdmin">
-        <button class="btn btn-outline-light mx-2" (click)="tradeCurrency()">Trade currency</button>
-      </li>
-      <li class="nav-item" *ngIf="loggedIn && !isAdmin">
-        <button class="btn btn-outline-light mx-2" (click)="addFunds()">Add funds</button>
-      </li>
       <li class="nav-item" *ngIf="loggedIn && isAdmin">
         <a class="nav-link text-light" [routerLink]="['/admin-panel']">Admin Panel</a>
       </li>
     </ul>
 
+
     <span class="text-light mx-2" *ngIf="loggedIn">Logged in as: {{username}}</span>
+    <div class="nav-item mx-2">
+      <select class="form-control bg-dark text-light" id="baseCurrencyInput" name="currency"
+              (change)="onCurrencySelected()"
+              [(ngModel)]="baseCurrency">
+        <option *ngFor="let currency of currencies">{{currency.currencyCode}}</option>
+      </select>
+    </div>
+    <button class="btn btn-outline-light mx-2" (click)="tradeCurrency()" *ngIf="loggedIn && !isAdmin">Trade currency
+    </button>
+    <button class="btn btn-outline-light mx-2" (click)="addFunds()" *ngIf="loggedIn && !isAdmin">Add funds</button>
     <button class="btn btn-outline-light mx-2" [routerLink]="['/register']" *ngIf="!loggedIn">Register</button>
     <button class="btn btn-outline-light mx-2" [routerLink]="['/login']" *ngIf="!loggedIn">Login</button>
     <button class="btn btn-outline-light mx-2" (click)="logout()" [routerLink]="['/']" *ngIf="loggedIn">Logout</button>
