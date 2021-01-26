@@ -42,7 +42,7 @@ public class CurrencyRateController {
                 : LocalDate.now().plusDays(1).atStartOfDay();
 
         if (toDate.isBefore(fromDate)) {
-            throw new InvalidArgumentException("End date cannot be before Start date.");
+            throw new InvalidArgumentException("End date cannot be before Start date");
         }
         
         List<CurrencyRate> currencyRates = currencyRateService.getCurrencyRatesBetween(baseCurrency, targetCurrency, fromDate, toDate);

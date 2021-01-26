@@ -24,7 +24,7 @@ public class CurrencyService {
         String uppercaseCurrencyCode = currencyCode.toUpperCase();
 
         currencyRepository.findByCurrencyCode(uppercaseCurrencyCode).ifPresent(currency -> {
-            throw new NotUniqueException("Currency " + uppercaseCurrencyCode + " already exists");
+            throw new NotUniqueException("Currency " + uppercaseCurrencyCode + " already activated");
         });
 
         List<String> validCurrencyCodes = exchangeRateApiService.getAllValidCurrencyCodes();

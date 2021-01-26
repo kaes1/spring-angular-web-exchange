@@ -13,10 +13,10 @@ public class RegisterRequest {
     String email;
 
     @NotBlank(message = "Username cannot be empty")
-    @Length(min = 3, message = "Username must be at least 3 characters long")
+    @Length(min = 6, message = "Username must be at least 6 characters long")
     String username;
 
     @NotBlank(message = "Password cannot be empty")
-    @Length(min = 3, message = "Password must be at least 3 characters long")
+    @Length(min = 6, message = "Password must be at least 6 characters long")
     String password;
 }

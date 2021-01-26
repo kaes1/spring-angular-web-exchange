@@ -43,9 +43,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, error, new HttpHeaders(), httpStatus, request);
     }
 
+    @ExceptionHandler(InvalidCurrencyRateException.class)
+    protected ResponseEntity<Object> handleInvalidCurrencyRateException(InvalidCurrencyRateException ex, WebRequest request) {
+        HttpStatus httpStatus = HttpStatus.CONFLICT;
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(new Date())
+                .status(httpStatus.value())
+                .error(httpStatus.getReasonPhrase())
+                .message(ex.getMessage())
+                .path(((ServletWebRequest) request).getRequest().getRequestURI())
+                .build();
+        return super.handleExceptionInternal(ex, error, new HttpHeaders(), httpStatus, request);
+    }
+
     @ExceptionHandler(InvalidArgumentException.class)
     protected ResponseEntity<Object> handleInvalidArgumentException(InvalidArgumentException ex, WebRequest request) {
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        HttpStatus httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(new Date())
                 .status(httpStatus.value())
