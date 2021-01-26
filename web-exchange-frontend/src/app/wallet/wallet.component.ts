@@ -5,7 +5,7 @@ import {WalletEntry} from '../model/wallet-entry.model';
 import {combineLatest} from 'rxjs';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {TradeCurrencyComponent} from '../trade-currency/trade-currency.component';
-import {FunctionEnum} from '../model/function-enum.model';
+import {AddFundsComponent} from '../add-funds/add-funds.component';
 
 @Component({
   selector: 'app-wallet',
@@ -35,13 +35,15 @@ export class WalletComponent implements OnInit {
   }
 
   public getWalletEntries() {
-    combineLatest([this.currencyService.getLatestCurrencyRateList(FunctionEnum.wallet), this.currencyService.getUserCurrencyBalanceList()]).subscribe(
+    combineLatest([this.currencyService.getLatestCurrencyRateList(), this.currencyService.getUserCurrencyBalanceList()]).subscribe(
       ([latestCurrencyRateList, userCurrencyBalancelist]) => {
         console.log(latestCurrencyRateList.currencyRates);
         console.log(userCurrencyBalancelist);
 
         this.userWalletEntries = [];
         this.baseCurrency = latestCurrencyRateList.baseCurrencyCode;
+        let userFunds = userCurrencyBalancelist.find(element => element.currencyCode == this.baseCurrency)?.amount;
+        this.availableFunds = userFunds || 0;
 
         for (let i = 0; i < latestCurrencyRateList.currencyRates.length; i++) {
           for (let j = 0; j < userCurrencyBalancelist.length; j++) {
@@ -62,6 +64,10 @@ export class WalletComponent implements OnInit {
 
   tradeCurrency() {
     this.modalService.open(TradeCurrencyComponent, {centered: true});
+  }
+
+  addFunds() {
+    this.modalService.open(AddFundsComponent, {centered: true});
   }
 
 }

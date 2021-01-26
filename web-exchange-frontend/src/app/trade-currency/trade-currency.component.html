@@ -5,12 +5,9 @@
       &times;
     </button>
   </div>
-
   <div class="modal-body">
     <form #f="ngForm">
-
       <div class="row">
-
         <div class="form-group col">
           <div class="input-group mb-2">
             <div class="input-group-prepend">
@@ -25,33 +22,27 @@
             </div>
           </div>
           <div *ngIf="(soldCurrency.dirty || soldCurrency.touched)" class="invalid-feedback d-block">
-            <div *ngIf="soldCurrency.invalid && soldCurrency.errors?.required"> Sold currency is required</div>
+            <div *ngIf="soldCurrency.invalid && soldCurrency.errors?.required">Sold currency is required</div>
           </div>
         </div>
-
         <div class="form-group col">
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">in amount</span>
             </div>
-            <input class="form-control" type="number" min="1" step="1" id="quantityInput" name="quantity" required
-                   #quantity="ngModel" pattern="[0-9]*"
+            <input class="form-control" type="number" min="1" id="quantityInput" name="quantity" required
+                   #quantity="ngModel"
                    [(ngModel)]="model.sellAmount">
             <div class="input-group-append">
             </div>
           </div>
           <div *ngIf="(quantity.dirty || quantity.touched)" class="invalid-feedback d-block">
-            <div *ngIf="quantity.invalid && quantity.errors?.required"> Quantity is required</div>
-            <div *ngIf="quantity.invalid && quantity.errors?.pattern"> Only whole numbers allowed</div>
-            <div *ngIf="quantity.value <= 0"> Only numbers greater than 0 allowed</div>
-            <!--          <div *ngIf="model.quantity * model.transactionBaseQuantity / currencyModel.currencyRate > availableBaseCurrency"> Not enough {{baseCurrency}} </div>-->
+            <div *ngIf="quantity.invalid && quantity.errors?.required">Quantity is required</div>
+            <div *ngIf="quantity.value <= 0">Only numbers greater than 0 allowed</div>
           </div>
         </div>
-
       </div>
-
       <div class="row">
-
         <div class="form-group col">
           <div class="input-group mb-2">
             <div class="input-group-prepend">
@@ -71,21 +62,18 @@
             </div>
           </div>
         </div>
-
         <div class="col">
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text">in amount</span>
             </div>
             <input class="form-control" type="text" readonly id="calculatedCost"
-                   [value]="(model.sellAmount * rate |  number:'1.4-4')">
+                   [value]="(model.sellAmount * model.rate |  number:'1.4-4')">
             <div class="input-group-append">
             </div>
           </div>
         </div>
-
       </div>
-
       <p *ngIf="failed" class="text-danger">{{failedMessage}}</p>
     </form>
   </div>
