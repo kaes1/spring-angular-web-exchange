@@ -6,8 +6,10 @@ import lombok.Value;
 public class CurrencyDTO {
 
     String currencyCode;
+    String country;
 
     public CurrencyDTO(Currency currency) {
         this.currencyCode = currency.getCurrencyCode();
+        this.country = currency.getCountry();
     }
 }

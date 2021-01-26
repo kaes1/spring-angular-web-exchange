@@ -38,6 +38,13 @@ public class CurrencyService {
         currencyRateUpdater.updateCurrencyRates(currency);
     }
 
+    public void setCurrencyCountry(String currencyCode, String country) {
+        String uppercaseCurrencyCode = currencyCode.toUpperCase();
+        Currency currency = getCurrency(uppercaseCurrencyCode);
+        currency.setCountry(country);
+        currencyRepository.save(currency);
+    }
+
     public Currency getCurrency(String currencyCode) throws NotFoundException {
         return currencyRepository.findByCurrencyCode(currencyCode)
                 .orElseThrow(() -> new NotFoundException("Currency " + currencyCode + " not found"));

@@ -1,18 +1,27 @@
 webexchange:
-  jwt:
+  registerConfirmationUrl: "http://localhost:4200/register-confirmation/"
+  jwtConfig:
     secret: "WebExchange"
     durationInSeconds: 3600
-  registerConfirmationUrl: "http://localhost:4200/register-confirmation/"
-  init:
-    currencies: EUR, PLN, CZK, CAD, USD
-    admin:
-      email: admin@email.com
-      username: admin
-      password: admin
-    user:
-      email: tester@mail.com
-      username: tester
-      password: tester
+  initialCurrencies:
+  - currencyCode: PLN
+    country: Poland
+  - currencyCode: EUR
+    country: Germany, France, Italy
+  - currencyCode: CZK
+    country: Czech Republic
+  - currencyCode: CAD
+    country: Canada
+  - currencyCode: USD
+    country: USA
+  admin:
+    email: admin@email.com
+    username: admin
+    password: admin
+  user:
+    email: tester@mail.com
+    username: tester
+    password: tester
 
 spring:
   datasource:

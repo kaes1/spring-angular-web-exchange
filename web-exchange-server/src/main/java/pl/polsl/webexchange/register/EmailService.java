@@ -1,10 +1,10 @@
 package pl.polsl.webexchange.register;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import pl.polsl.webexchange.WebExchangeProperties;
 import pl.polsl.webexchange.user.User;
 
 import java.util.UUID;
@@ -13,11 +13,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmailService {
 
-    @Value("${webexchange.registerConfirmationUrl}")
-    private String registerConfirmationUrl;
-
     private final JavaMailSender mailSender;
     private final RegisterConfirmationTokenRepository registerConfirmationTokenRepository;
+    private final WebExchangeProperties webExchangeProperties;
 
     public void sendRegistrationConfirmationEmail(User user) {
         String token = UUID.randomUUID().toString();
@@ -29,7 +27,7 @@ public class EmailService {
         emailMessage.setFrom("webexchange.app@yahoo.com");
         emailMessage.setSubject("WebExchange Registration confirmation");
         emailMessage.setText("To confirm your account, please click the link: "
-                + registerConfirmationUrl + confirmationToken.getToken());
+                + webExchangeProperties.getRegisterConfirmationUrl() + confirmationToken.getToken());
         mailSender.send(emailMessage);
     }
 }

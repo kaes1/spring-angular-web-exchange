@@ -16,7 +16,14 @@ public class Currency {
     @Column(unique = true)
     private String currencyCode;
 
+    private String country;
+
     public Currency(String currencyCode) {
         this.currencyCode = currencyCode;
+    }
+
+    public Currency(String currencyCode, String country) {
+        this.currencyCode = currencyCode;
+        this.country = country;
     }
 }

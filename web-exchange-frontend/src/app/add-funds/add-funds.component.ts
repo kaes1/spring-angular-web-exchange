@@ -15,7 +15,7 @@ export class AddFundsComponent implements OnInit {
   currencies: Currency[] = [];
 
   failed = false;
-  failedMessage: string = '';
+  failedMessage = '';
 
   constructor(private activeModal: NgbActiveModal,
               private currencyService: CurrencyService) {
@@ -24,6 +24,9 @@ export class AddFundsComponent implements OnInit {
   ngOnInit(): void {
     this.currencyService.getCurrencies().subscribe(currencies => {
       this.currencies = currencies;
+    });
+    this.currencyService.getBaseCurrency().subscribe(baseCurrency => {
+      this.model.currencyCode = baseCurrency.currencyCode;
     });
   }
 
