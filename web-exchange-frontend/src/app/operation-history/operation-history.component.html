@@ -1,45 +1,54 @@
+<h2 class="center-content" style="margin-bottom: 15px; margin-top: 15px;">Operation history</h2>
 <div class="center-content">
-  <h1>Operation history</h1>
-</div>
-
-<form #f="ngForm" (ngSubmit)="fetchOperationHistory()" class="form-inline my-3">
-
-  <label for="fromInput" class="sr-only"> From </label>
-  <div class="input-group mr-sm-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text"> From </div>
-    </div>
-    <input id="fromInput" name="from" type="date" class="form-control" [(ngModel)]="fromDate" required>
-  </div>
-
-  <label for="toInput" class="sr-only"> To </label>
-  <div class="input-group mr-sm-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text"> To </div>
-    </div>
-    <input id="toInput" name="to" type="date" class="form-control" [(ngModel)]="toDate" required>
-  </div>
-
-  <div class="input-group mr-sm-2">
-    <button type="submit" class="btn btn-primary" [disabled]="!f.valid"> Search </button>
-  </div>
-
-</form>
-
-<div *ngFor="let operation of operationHistoryList">
-  <div class="card mb-3">
-    <div class="card-header">
-      Operation ID: {{operation.id}}
-    </div>
+  <div class="card" style="margin: 10px; width: 100%; max-width: 1000px;">
     <div class="card-body">
-      <h5 class="card-title"> {{operation.dateTime | date:'medium'}} </h5>
-      <p class="card-text">
-        {{operation.operationMessage}}
-      </p>
+      <form #f="ngForm" (ngSubmit)="fetchOperationHistory()" class="form-inline my-3">
+
+        <label for="fromInput" class="sr-only"> From </label>
+        <div class="input-group mr-sm-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text"> From </div>
+          </div>
+          <input id="fromInput" name="from" type="date" class="form-control" (change)="onFromSelected()" [(ngModel)]="fromDate" required>
+        </div>
+
+        <label for="toInput" class="sr-only"> To </label>
+        <div class="input-group mr-sm-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text"> To </div>
+          </div>
+          <input id="toInput" name="to" type="date" class="form-control" (change)="onToSelected()" [(ngModel)]="toDate" required>
+        </div>
+
+        <div class="input-group mr-sm-2">
+          <button type="submit" class="btn btn-primary" [disabled]="!f.valid"> Search </button>
+        </div>
+
+      </form>
+
+      <div *ngFor="let operation of operationHistoryList">
+        <div class="card mb-3">
+          <div class="card-header">
+            Operation ID: {{operation.id}}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title"> {{operation.dateTime | date:'medium'}} </h5>
+            <p class="card-text">
+              {{operation.operationMessage}}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="center-content" *ngIf="operationHistoryList.length == 0">
+        <h4>No operation history search results.</h4>
+      </div>
+
     </div>
   </div>
 </div>
 
-<div class="center-content" *ngIf="operationHistoryList.length == 0">
-  <h4>No operation history search results.</h4>
-</div>
+
+
+
+

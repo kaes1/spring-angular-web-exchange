@@ -3,7 +3,7 @@ import {ApiService} from '../api/api.service';
 import {ApiEndpoints} from '../api/api-endpoints';
 import {interval, Observable, ReplaySubject, Subscription} from 'rxjs';
 import {UserCurrencyBalance} from '../model/user-currency-balance.model';
-import {LatestCurrencyRateList} from '../model/latest-currency-rate-list.model';
+import {LatestCurrencyRates} from '../model/latest-currency-rate-list.model';
 import {HttpParams} from '@angular/common/http';
 import {CurrencyRateHistory} from '../model/currency-rate-history.model';
 import {Currency} from '../model/currency.model';
@@ -17,7 +17,7 @@ import {AddFundsRequest} from '../model/add-funds-request.model';
 export class CurrencyService implements OnDestroy {
 
   private userCurrencyBalanceListSubject = new ReplaySubject<UserCurrencyBalance[]>(1);
-  private latestCurrencyRateListSubject = new ReplaySubject<LatestCurrencyRateList>(1);
+  private latestCurrencyRatesSubject = new ReplaySubject<LatestCurrencyRates>(1);
   private currencyRateHistorySubject = new ReplaySubject<CurrencyRateHistory>(1);
   private currenciesSubject = new ReplaySubject<Currency[]>(1);
   private userBaseCurrencySubject = new ReplaySubject<Currency>(1);
@@ -66,23 +66,23 @@ export class CurrencyService implements OnDestroy {
     params = params.append('baseCurrencyCode', baseCurrency);
     params = params.append('targetCurrencyCode', targetCurrency);
 
-    return this.apiService.get<LatestCurrencyRateList>(ApiEndpoints.CURRENCY_RATES_LATEST, params).pipe(
+    return this.apiService.get<LatestCurrencyRates>(ApiEndpoints.CURRENCY_RATES_LATEST, params).pipe(
       map(latestCurrencyList => {
         return latestCurrencyList.currencyRates.find(x => x.targetCurrencyCode == targetCurrency);
       })
     );
   }
 
-  public getLatestCurrencyRateList(): Observable<LatestCurrencyRateList> {
-    return this.latestCurrencyRateListSubject.asObservable();
+  public getLatestCurrencyRates(): Observable<LatestCurrencyRates> {
+    return this.latestCurrencyRatesSubject.asObservable();
   }
 
   public fetchLatestCurrencyRateList(baseCurrency: string) {
     let params = new HttpParams();
     params = params.append('baseCurrencyCode', baseCurrency);
 
-    this.apiService.get<LatestCurrencyRateList>(ApiEndpoints.CURRENCY_RATES_LATEST, params).subscribe((latestCurrencyRateList: LatestCurrencyRateList) => {
-      this.latestCurrencyRateListSubject.next(latestCurrencyRateList);
+    this.apiService.get<LatestCurrencyRates>(ApiEndpoints.CURRENCY_RATES_LATEST, params).subscribe((latestCurrencyRateList: LatestCurrencyRates) => {
+      this.latestCurrencyRatesSubject.next(latestCurrencyRateList);
     });
   }
 

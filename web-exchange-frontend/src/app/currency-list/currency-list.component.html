@@ -6,7 +6,7 @@
   </thead>
   <tbody>
   <tr *ngFor="let entry of entries; index as i">
-    <td class="text-center">{{entry.targetCurrencyCode}}</td>
+    <td class="text-center">{{entry.currencyCode}}</td>
     <td class="text-center">{{entry.rate | number:'1.4-4'}}</td>
   </tr>
   </tbody>

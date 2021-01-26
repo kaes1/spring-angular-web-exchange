@@ -38,4 +38,16 @@ export class OperationHistoryComponent implements OnInit {
       this.operationHistoryList = response;
     });
   }
+
+  onFromSelected() {
+    if (this.fromDate > this.toDate) {
+      this.toDate = '';
+    }
+  }
+
+  onToSelected() {
+    if (this.fromDate > this.toDate) {
+      this.fromDate = '';
+    }
+  }
 }

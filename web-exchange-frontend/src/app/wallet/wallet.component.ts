@@ -16,7 +16,6 @@ export class WalletComponent implements OnInit {
 
   userWalletEntries: WalletEntry[] = [];
   baseCurrency: string = '';
-  availableFunds: number = 0;
 
   constructor(private authService: AuthService,
               private currencyService: CurrencyService,
@@ -32,24 +31,21 @@ export class WalletComponent implements OnInit {
   }
 
   public getWalletEntries() {
-    combineLatest([this.currencyService.getLatestCurrencyRateList(), this.currencyService.getUserCurrencyBalanceList()]).subscribe(
-      ([latestCurrencyRateList, userCurrencyBalancelist]) => {
+    combineLatest([this.currencyService.getCurrencies(), this.currencyService.getLatestCurrencyRates(), this.currencyService.getUserCurrencyBalanceList()]).subscribe(
+      ([currencies, latestCurrencyRates, userCurrencyBalancelist]) => {
         this.userWalletEntries = [];
-        let userFunds = userCurrencyBalancelist.find(element => element.currencyCode == this.baseCurrency)?.amount;
-        this.availableFunds = userFunds || 0;
 
-        for (let i = 0; i < latestCurrencyRateList.currencyRates.length; i++) {
-          for (let j = 0; j < userCurrencyBalancelist.length; j++) {
-            if (latestCurrencyRateList.currencyRates[i].targetCurrencyCode == userCurrencyBalancelist[j].currencyCode) {
-              let entry: WalletEntry = {
-                currencyCode: userCurrencyBalancelist[j].currencyCode,
-                rate: latestCurrencyRateList.currencyRates[i].rate,
-                amount: userCurrencyBalancelist[j].amount,
-              };
-              this.userWalletEntries.push(entry);
-            }
-          }
-        }
+        currencies.forEach(currency => {
+          let balance = userCurrencyBalancelist.find(el => el.currencyCode == currency.currencyCode);
+          let currencyRate = latestCurrencyRates.currencyRates.find(el => el.targetCurrencyCode == currency.currencyCode);
+
+          let entry: WalletEntry = {
+            currencyCode: currency.currencyCode,
+            rate: currencyRate?.rate || 1,
+            amount: balance?.amount || 0,
+          };
+          this.userWalletEntries.push(entry);
+        });
       }
     );
   }
