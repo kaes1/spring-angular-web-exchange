@@ -14,7 +14,7 @@
     <tr *ngFor="let config of currencyConfigurationList; index as i">
       <td>{{config.currencyCode}}</td>
       <td>
-        <button *ngIf="!config.active" (click)="activateCurrency(config.currencyCode)"
+        <button *ngIf="!config.active" (click)="activateCurrency(config)"
          class="btn btn-secondary btn-sm">
           Activate
         </button>

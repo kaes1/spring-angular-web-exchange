@@ -40,7 +40,7 @@ public class OperationService {
 
     @Transactional
     public AddFundsResponse addFunds(User user, AddFundsRequest addFundsRequest) {
-        Currency currency = currencyService.getCurrency(addFundsRequest.getCurrencyCode());
+        Currency currency = currencyService.getActiveCurrency(addFundsRequest.getCurrencyCode());
         UserCurrencyBalance userCurrencyBalance = userCurrencyBalanceService.getUserCurrencyBalance(user, currency);
 
         userCurrencyBalance.addAmount(addFundsRequest.getAmount());
@@ -52,8 +52,8 @@ public class OperationService {
     }
 
     public TradeCurrencyResponse tradeCurrency(User user, TradeCurrencyRequest tradeCurrencyRequest) {
-        Currency boughtCurrency = currencyService.getCurrency(tradeCurrencyRequest.getBoughtCurrencyCode());
-        Currency soldCurrency = currencyService.getCurrency(tradeCurrencyRequest.getSoldCurrencyCode());
+        Currency boughtCurrency = currencyService.getActiveCurrency(tradeCurrencyRequest.getBoughtCurrencyCode());
+        Currency soldCurrency = currencyService.getActiveCurrency(tradeCurrencyRequest.getSoldCurrencyCode());
 
         CurrencyRate currencyRate = currencyRateService.getLatestCurrencyRate(soldCurrency, boughtCurrency);
 

@@ -1,13 +1,13 @@
 package pl.polsl.webexchange.currency;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-import pl.polsl.webexchange.currencyrate.ExchangeRateApiService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -15,25 +15,23 @@ import java.util.stream.Collectors;
 public class CurrencyController {
 
     private final CurrencyService currencyService;
-    private final ExchangeRateApiService exchangeRateApiService;
 
     @GetMapping("api/currencies")
-    public List<CurrencyDTO> getCurrencies() {
-        return currencyService.getAllCurrencies().stream()
+    public List<CurrencyDTO> getActiveCurrencies() {
+        return currencyService.getActiveCurrencies().stream()
                 .map(CurrencyDTO::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("api/currencies/configuration")
     public List<CurrencyConfigurationDTO> getCurrencyConfiguration() {
-        List<String> allValidCurrencyCodes = exchangeRateApiService.getAllValidCurrencyCodes();
-        return allValidCurrencyCodes.stream()
-                .map(code -> new CurrencyConfigurationDTO(code, currencyService.isActive(code)))
+        return currencyService.getAllCurrencies().stream()
+                .map(CurrencyConfigurationDTO::new)
                 .collect(Collectors.toList());
     }
 
     @PostMapping("api/currencies/configuration")
-    public void activateCurrency(@RequestBody @Valid ActivateCurrencyRequest request) {
-        currencyService.activateCurrency(request.getCurrencyCode());
+    public void modifyCurrency(@RequestBody @Valid ModifyCurrencyRequest request) {
+        currencyService.modifyCurrency(request.getCurrencyCode(), request.getCountry(), request.getActive());
     }
 }

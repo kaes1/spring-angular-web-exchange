@@ -17,48 +17,40 @@ import java.util.List;
 public class CurrencyService {
 
     private final CurrencyRepository currencyRepository;
-    private final ExchangeRateApiService exchangeRateApiService;
     private final CurrencyRateUpdater currencyRateUpdater;
 
-    public void activateCurrency(String currencyCode) {
-        String uppercaseCurrencyCode = currencyCode.toUpperCase();
-
-        currencyRepository.findByCurrencyCode(uppercaseCurrencyCode).ifPresent(currency -> {
-            throw new NotUniqueException("Currency " + uppercaseCurrencyCode + " already activated");
-        });
-
-        List<String> validCurrencyCodes = exchangeRateApiService.getAllValidCurrencyCodes();
-
-        if (!validCurrencyCodes.contains(uppercaseCurrencyCode)) {
-            throw new InvalidArgumentException("Currency " + uppercaseCurrencyCode + " is not a valid currency");
+    public void modifyCurrency(String currencyCode, String newCountry, Boolean newActive) {
+        Currency currency = getCurrency(currencyCode);
+        if (currency.getActive() && !newActive) {
+            throw new InvalidArgumentException("Cannot deactivate currency");
         }
-
-        Currency currency = new Currency(uppercaseCurrencyCode);
-        currency = currencyRepository.save(currency);
-        currencyRateUpdater.updateCurrencyRates(currency);
-    }
-
-    public void setCurrencyCountry(String currencyCode, String country) {
-        String uppercaseCurrencyCode = currencyCode.toUpperCase();
-        Currency currency = getCurrency(uppercaseCurrencyCode);
-        currency.setCountry(country);
+        currency.setCountry(newCountry);
+        currency.setActive(newActive);
         currencyRepository.save(currency);
+        if (newActive) {
+            currencyRateUpdater.updateCurrencyRates();
+        }
     }
 
     public Currency getCurrency(String currencyCode) throws NotFoundException {
-        return currencyRepository.findByCurrencyCode(currencyCode)
+        return currencyRepository.findByCurrencyCode(currencyCode.toUpperCase())
                 .orElseThrow(() -> new NotFoundException("Currency " + currencyCode + " not found"));
     }
 
-    public boolean isActive(String currencyCode) {
-        return currencyRepository.findByCurrencyCode(currencyCode).isPresent();
+    public Currency getActiveCurrency(String currencyCode) throws NotFoundException {
+        return currencyRepository.findByActiveTrueAndCurrencyCode(currencyCode.toUpperCase())
+                .orElseThrow(() -> new NotFoundException("Currency " + currencyCode + " not found"));
     }
 
     public List<Currency> getAllCurrencies() {
         return currencyRepository.findAll();
     }
 
-    public List<Currency> getCurrenciesOtherThan(String currencyCode) {
-        return currencyRepository.findAllByCurrencyCodeNotLike(currencyCode);
+    public List<Currency> getActiveCurrencies() {
+        return currencyRepository.findAllByActiveTrue();
+    }
+
+    public List<Currency> getActiveCurrenciesOtherThan(String currencyCode) {
+        return currencyRepository.findAllByActiveTrueAndCurrencyCodeNotLike(currencyCode);
     }
 }

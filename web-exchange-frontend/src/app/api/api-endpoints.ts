@@ -6,7 +6,7 @@ export class ApiEndpoints {
 
   public static readonly CURRENCIES = 'api/currencies';
   public static readonly ADMIN_CURRENCY_CONFIGURATION = 'api/currencies/configuration';
-  public static readonly ADMIN_CURRENCY_ACTIVATE = 'api/currencies/configuration';
+  public static readonly ADMIN_CURRENCY_MODIFY = 'api/currencies/configuration';
 
   public static readonly CURRENCY_RATES_LATEST = 'api/currencyRates/latest';
   public static readonly CURRENCY_RATES_HISTORY = 'api/currencyRates/history';

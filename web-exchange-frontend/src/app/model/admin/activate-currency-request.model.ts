@@ -1,3 +1,5 @@
-export interface ActivateCurrencyRequest {
+export interface ModifyCurrencyRequest {
   currencyCode: string;
+  country: string;
+  active: boolean;
 }

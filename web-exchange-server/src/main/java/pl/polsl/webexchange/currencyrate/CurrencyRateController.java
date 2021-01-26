@@ -30,8 +30,8 @@ public class CurrencyRateController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to
     ) {
-        Currency baseCurrency = currencyService.getCurrency(baseCurrencyCode);
-        Currency targetCurrency = currencyService.getCurrency(targetCurrencyCode);
+        Currency baseCurrency = currencyService.getActiveCurrency(baseCurrencyCode);
+        Currency targetCurrency = currencyService.getActiveCurrency(targetCurrencyCode);
 
         LocalDateTime fromDate = from != null
                 ? from
@@ -59,10 +59,10 @@ public class CurrencyRateController {
 
     @GetMapping("api/currencyRates/latest")
     public ResponseEntity<LatestCurrencyRatesResponse> getLatestCurrencyRates(@RequestParam(defaultValue = "EUR") String baseCurrencyCode, @RequestParam(required = false) String targetCurrencyCode) {
-        Currency baseCurrency = currencyService.getCurrency(baseCurrencyCode);
+        Currency baseCurrency = currencyService.getActiveCurrency(baseCurrencyCode);
         List<Currency> targetCurrencies = targetCurrencyCode != null
-                ? Collections.singletonList(currencyService.getCurrency(targetCurrencyCode))
-                : currencyService.getCurrenciesOtherThan(baseCurrencyCode);
+                ? Collections.singletonList(currencyService.getActiveCurrency(targetCurrencyCode))
+                : currencyService.getActiveCurrenciesOtherThan(baseCurrencyCode);
         List<CurrencyRate> currencyRates = targetCurrencies.stream()
                 .map(targetCurrency -> currencyRateService.getLatestCurrencyRate(baseCurrency, targetCurrency))
                 .collect(Collectors.toList());

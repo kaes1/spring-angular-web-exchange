@@ -1,7 +1,6 @@
 package pl.polsl.webexchange.usercurrencybalance;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +21,7 @@ public class UserCurrencyBalanceController {
 
     @GetMapping("api/userBalance")
     public ResponseEntity<List<UserCurrencyBalanceDTO>> getUserCurrencyBalance(@AuthenticationPrincipal User user) {
-        List<Currency> allCurrencies = currencyService.getAllCurrencies();
+        List<Currency> allCurrencies = currencyService.getActiveCurrencies();
         List<UserCurrencyBalanceDTO> dtos = allCurrencies.stream()
                 .map(currency -> userCurrencyBalanceService.getUserCurrencyBalance(user, currency))
                 .map(UserCurrencyBalanceDTO::new)

@@ -5,8 +5,11 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import pl.polsl.webexchange.currency.Currency;
+import pl.polsl.webexchange.currency.CurrencyRepository;
 import pl.polsl.webexchange.currency.CurrencyService;
 import pl.polsl.webexchange.currencyrate.CurrencyRateUpdater;
+import pl.polsl.webexchange.currencyrate.ExchangeRateApiService;
 import pl.polsl.webexchange.user.Role;
 import pl.polsl.webexchange.user.User;
 import pl.polsl.webexchange.user.UserRepository;
@@ -18,10 +21,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DataInitializer implements ApplicationRunner {
 
-    private final CurrencyService currencyService;
+    private final CurrencyRepository currencyRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final CurrencyRateUpdater currencyRateUpdater;
+    private final ExchangeRateApiService exchangeRateApiService;
     private final WebExchangeProperties webExchangeProperties;
 
     @Override
@@ -41,11 +45,19 @@ public class DataInitializer implements ApplicationRunner {
 
         List<WebExchangeProperties.CurrencyConfig> initialCurrencies = webExchangeProperties.getInitialCurrencies();
 
-        for (WebExchangeProperties.CurrencyConfig currencyConfig : initialCurrencies) {
-            currencyService.activateCurrency(currencyConfig.getCurrencyCode());
-            currencyService.setCurrencyCountry(currencyConfig.getCurrencyCode(), currencyConfig.getCountry());
-        }
+        exchangeRateApiService.getAllValidCurrencyCodes().forEach(currencyCode -> {
+            Currency currency = new Currency(currencyCode.toUpperCase());
+            initialCurrencies.stream()
+                    .filter(currencyConfig -> currencyConfig.getCurrencyCode().equals(currencyCode))
+                    .findFirst()
+                    .ifPresent(currencyConfig -> {
+                        currency.setActive(true);
+                        currency.setCountry(currencyConfig.getCountry());
+                    });
+            currencyRepository.save(currency);
+        });
 
         this.currencyRateUpdater.updateCurrencyRates();
     }
+
 }

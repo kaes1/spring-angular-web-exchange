@@ -18,12 +18,17 @@ public class Currency {
 
     private String country;
 
+    private Boolean active;
+
     public Currency(String currencyCode) {
         this.currencyCode = currencyCode;
+        this.country = null;
+        this.active = false;
     }
 
-    public Currency(String currencyCode, String country) {
+    public Currency(String currencyCode, String country, Boolean active) {
         this.currencyCode = currencyCode;
         this.country = country;
+        this.active = active;
     }
 }
