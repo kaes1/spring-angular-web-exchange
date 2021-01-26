@@ -35,7 +35,7 @@ export class GraphService {
         series: [],
       };
       for (let i = 0; i < currencyRateHistory.currencyRates.length; i++) {
-        let datetime = new DatePipe('en-US').transform(new Date(currencyRateHistory.currencyRates[i].dateTime), 'd/M/yy, h:mm a');
+        let datetime = new DatePipe('en-US').transform(new Date(currencyRateHistory.currencyRates[i].dateTime), 'dd/MM/yy, HH:mm');
         let name = (datetime != null ? datetime : '');
         let graphPoint: GraphPoint = {
           name: name,
