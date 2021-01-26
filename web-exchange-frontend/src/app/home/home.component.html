@@ -2,10 +2,11 @@
   <h1>Welcome to WebExchange!</h1>
 </div>
 
-<div class="center-content" style="display: flex; flex-wrap: wrap">
-  <div class="card">
+<div class="center-content">
+  <div class="card" style="margin: 10px; width: 100%; max-width: 1000px;">
     <div class="card-body">
-      <app-currency-rates-graph></app-currency-rates-graph>
+      <app-currency-list *ngIf="!loggedIn || (loggedIn && isAdmin)"></app-currency-list>
+      <app-wallet *ngIf="loggedIn && !isAdmin"></app-wallet>
     </div>
   </div>
 </div>

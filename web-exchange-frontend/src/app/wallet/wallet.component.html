@@ -1,39 +1,27 @@
-<div class="center-content">
-  <h1>Wallet</h1>
-</div>
-
-<div class="center-content">
-  <div class="card" style="margin: 10px; width: 100%; max-width: 1000px;">
-    <div class="card-body">
-      <table *ngIf="userWalletEntries.length > 0" class="table table-striped table-bordered">
-        <thead>
-        <th class="text-center">Currency</th>
-        <th class="text-center">Current Rate</th>
-        <th class="text-center">Owned Amount</th>
-        </thead>
-        <tbody>
-        <tr *ngFor="let entry of userWalletEntries; index as i">
-          <td class="text-center">{{entry.currencyCode}}</td>
-          <td class="text-center">{{entry.rate | number:'1.4-4'}}</td>
-          <td class="text-center">{{entry.amount | number:'1.4-4'}}</td>
-        </tr>
-        </tbody>
-      </table>
-
-
-      <div class="row">
-        <div class="col">
-          <div class="row" style="margin-left: 10px;">Presenting rates compared to {{baseCurrency}}</div>
-          <div class="row" style="margin-left: 10px;">Available funds: {{availableFunds | number:'1.4-4'}} {{baseCurrency}}</div>
-        </div>
-        <div style="margin-right: 15px; margin-top: 5px;">
-          <button class="btn btn-primary" style="width:200px; margin-right: 20px;" (click)="tradeCurrency()">Trade
-            Currency
-          </button>
-          <button class="btn btn-primary" style="width:200px;" (click)="addFunds()">Add Funds</button>
-        </div>
-      </div>
-
-    </div>
+<h2 class="center-content" style="margin-bottom: 25px;">Wallet</h2>
+<table *ngIf="userWalletEntries.length > 0" class="table table-striped table-bordered">
+  <thead>
+  <th class="text-center">Currency</th>
+  <th class="text-center">Current Rate</th>
+  <th class="text-center">Owned Amount</th>
+  </thead>
+  <tbody>
+  <tr *ngFor="let entry of userWalletEntries; index as i">
+    <td class="text-center">{{entry.currencyCode}}</td>
+    <td class="text-center">{{entry.rate | number:'1.4-4'}}</td>
+    <td class="text-center">{{entry.amount | number:'1.4-4'}}</td>
+  </tr>
+  </tbody>
+</table>
+<div class="row">
+  <div class="col">
+    <div class="row" style="margin-left: 10px;">Presenting rates compared to {{baseCurrency}}</div>
+    <div class="row" style="margin-left: 10px;">Available
+      funds: {{availableFunds | number:'1.4-4'}} {{baseCurrency}}</div>
+  </div>
+  <div style="margin-right: 15px; margin-top: 5px;">
+    <button class="btn btn-primary" style="width:200px; margin-right: 20px;" (click)="tradeCurrency()">Trade Currency
+    </button>
+    <button class="btn btn-primary" style="width:200px;" (click)="addFunds()">Add Funds</button>
   </div>
 </div>

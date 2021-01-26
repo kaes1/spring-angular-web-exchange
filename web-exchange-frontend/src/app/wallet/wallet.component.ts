@@ -14,7 +14,6 @@ import {AddFundsComponent} from '../add-funds/add-funds.component';
 })
 export class WalletComponent implements OnInit {
 
-  isLoggedIn = false;
   userWalletEntries: WalletEntry[] = [];
   baseCurrency: string = '';
   availableFunds: number = 0;
@@ -25,13 +24,11 @@ export class WalletComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.getLoggedIn().subscribe(loggedIn => {
-      this.isLoggedIn = loggedIn;
-      if (loggedIn) {
-        this.currencyService.fetchUserCurrencyBalanceList();
-        this.getWalletEntries();
-      }
+    this.currencyService.getBaseCurrency().subscribe(baseCurrency => {
+      this.baseCurrency = baseCurrency.currencyCode;
     });
+    this.currencyService.fetchUserCurrencyBalanceList();
+    this.getWalletEntries();
   }
 
   public getWalletEntries() {
@@ -41,7 +38,6 @@ export class WalletComponent implements OnInit {
         console.log(userCurrencyBalancelist);
 
         this.userWalletEntries = [];
-        this.baseCurrency = latestCurrencyRateList.baseCurrencyCode;
         let userFunds = userCurrencyBalancelist.find(element => element.currencyCode == this.baseCurrency)?.amount;
         this.availableFunds = userFunds || 0;
 

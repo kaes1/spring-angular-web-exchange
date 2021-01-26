@@ -6,7 +6,6 @@ import {interval, Observable, ReplaySubject, Subscription} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {ApiEndpoints} from '../api/api-endpoints';
-import {FunctionEnum} from '../model/function-enum.model';
 
 @Injectable({
   providedIn: 'root'

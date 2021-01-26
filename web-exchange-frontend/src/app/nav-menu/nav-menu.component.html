@@ -4,7 +4,8 @@
     WebExchange
   </a>
 
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation" >
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
+          aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
@@ -12,12 +13,18 @@
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <a class="nav-link text-light" [routerLink]="['/']">Home</a>
-      </li >
-      <li class="nav-item" *ngIf="loggedIn && !isAdmin">
-        <a class="nav-link text-light" [routerLink]="['/wallet']">Wallet</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-light" [routerLink]="['/graph']">Graph</a>
       </li>
       <li class="nav-item" *ngIf="loggedIn && !isAdmin">
         <a class="nav-link text-light" [routerLink]="['/operation-history']">Operation History</a>
+      </li>
+      <li class="nav-item" *ngIf="loggedIn && !isAdmin">
+        <button class="btn btn-outline-light mx-2" (click)="tradeCurrency()">Trade currency</button>
+      </li>
+      <li class="nav-item" *ngIf="loggedIn && !isAdmin">
+        <button class="btn btn-outline-light mx-2" (click)="addFunds()">Add funds</button>
       </li>
       <li class="nav-item" *ngIf="loggedIn && isAdmin">
         <a class="nav-link text-light" [routerLink]="['/admin-panel']">Admin Panel</a>

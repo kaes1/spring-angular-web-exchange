@@ -10,6 +10,7 @@ import {AuthService} from '../auth/auth.service';
 export class HomeComponent implements OnInit {
 
   loggedIn = false;
+  isAdmin = false;
 
   constructor(private apiService: ApiService,
               private authService: AuthService) {
@@ -17,21 +18,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.getLoggedIn().subscribe(loggedIn => this.loggedIn = loggedIn);
+    this.authService.getRole().subscribe(role => this.isAdmin = role === 'ROLE_ADMIN');
   }
 
-  logout() {
-    this.authService.logout();
-  }
-
-  testOpenEndpoint() {
-    this.apiService.get('api/open').subscribe(response => {
-      console.log(response);
-    });
-  }
-
-  testSecureEndpoint() {
-    this.apiService.get('api/secure').subscribe(response => {
-      console.log(response);
-    });
-  }
 }

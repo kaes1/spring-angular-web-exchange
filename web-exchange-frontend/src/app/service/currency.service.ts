@@ -27,6 +27,7 @@ export class CurrencyService implements OnDestroy {
   constructor(private apiService: ApiService) {
     this.fetchCurrencies();
     this.setBaseCurrency({currencyCode: 'EUR'});
+
     this.userBaseCurrencySubject.subscribe(newCurrency => {
       this.latestCurrencyRateSubscription.unsubscribe();
       this.fetchLatestCurrencyRateList(newCurrency.currencyCode);
@@ -34,7 +35,6 @@ export class CurrencyService implements OnDestroy {
       this.latestCurrencyRateSubscription = source.subscribe(() => {
         this.fetchLatestCurrencyRateList(newCurrency.currencyCode);
       });
-
     });
   }
 
@@ -44,6 +44,10 @@ export class CurrencyService implements OnDestroy {
 
   public setBaseCurrency(newBaseCurrency: Currency) {
     this.userBaseCurrencySubject.next(newBaseCurrency);
+  }
+
+  public getBaseCurrency(): Observable<Currency> {
+    return this.userBaseCurrencySubject.asObservable();
   }
 
   public getUserCurrencyBalanceList(): Observable<UserCurrencyBalanceModel[]> {

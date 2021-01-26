@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
+import {TradeCurrencyComponent} from '../trade-currency/trade-currency.component';
+import {AddFundsComponent} from '../add-funds/add-funds.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-nav-menu',
@@ -12,7 +15,9 @@ export class NavMenuComponent implements OnInit {
   isAdmin = false;
   username = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+              private modalService: NgbModal) {
+  }
 
   ngOnInit(): void {
     this.authService.getLoggedIn().subscribe(loggedIn => this.loggedIn = loggedIn);
@@ -22,6 +27,14 @@ export class NavMenuComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  tradeCurrency() {
+    this.modalService.open(TradeCurrencyComponent, {centered: true});
+  }
+
+  addFunds() {
+    this.modalService.open(AddFundsComponent, {centered: true});
   }
 
 }

@@ -1,69 +1,68 @@
-<div class="center-content" style="margin-bottom: 15px; margin-top: 15px;">
-  <h3>Currency Rates Graph</h3>
+<h2 class="center-content" style="margin-bottom: 15px; margin-top: 15px;">Currency Rates Graph</h2>
+<div class="center-content" style="display: flex; flex-wrap: wrap">
+  <div class="card">
+    <div class="card-body">
+      <form #f="ngForm" (ngSubmit)="fetchGraphInInterval()" class="form-inline my-3">
+        <div class="input-group mr-sm-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text"> Base Currency</div>
+          </div>
+          <select class="form-control" id="baseCurrencyInput" name="baseCurrency" required #baseCurrency="ngModel"
+                  [(ngModel)]="selectedParams.baseCurrency">
+            <option value="" disabled selected>...</option>
+            <option *ngFor="let currency of currencies">{{currency.currencyCode}}</option>
+          </select>
+        </div>
+        <div class="input-group mr-sm-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text"> Target Currency</div>
+          </div>
+          <select class="form-control" id="targetCurrencyInput" name="targetCurrency" required #targetCurrency="ngModel"
+                  [(ngModel)]="selectedParams.targetCurrency">
+            <option value="" disabled selected>...</option>
+            <option *ngFor="let currency of currencies">{{currency.currencyCode}}</option>
+          </select>
+        </div>
+        <div class="input-group mr-sm-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text"> From</div>
+          </div>
+          <input id="fromInput" name="from" type="datetime-local" class="form-control" [(ngModel)]="selectedParams.from"
+                 required>
+        </div>
+        <div class="input-group mr-sm-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text"> To</div>
+          </div>
+          <input id="toInput" name="to" type="datetime-local" class="form-control" [(ngModel)]="selectedParams.to"
+                 required>
+        </div>
+        <div class="input-group mr-sm-2">
+          <button type="submit" class="btn btn-primary" [disabled]="!f.valid"> Display</button>
+        </div>
+      </form>
+      <div>
+        <div style="margin-top: 15px; min-height: 500px; min-width: 200px;" *ngIf="graphData.length > 0">
+          <ngx-charts-line-chart *ngIf="graphData.length > 0"
+                                 [results]="graphData"
+                                 [autoScale]="true"
+                                 [timeline]="false"
+                                 [xAxis]="true"
+                                 [xAxisLabel]="'Datetime'"
+                                 [showXAxisLabel]="true"
+                                 [yAxis]="true"
+                                 [yAxisLabel]="'Currency Rate'"
+                                 [showYAxisLabel]="true"
+                                 [legend]="true"
+          ></ngx-charts-line-chart>
+        </div>
+        <div *ngIf="graphData.length == 0"
+             style="text-align: center; display: flex; justify-content: center; align-items: center; min-height: 500px; min-width: 200px;">
+          <h5>No currencies selected.</h5>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<form #f="ngForm" (ngSubmit)="fetchGraphInInterval()" class="form-inline my-3">
 
-  <div class="input-group mr-sm-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text"> Base Currency</div>
-    </div>
-    <select class="form-control" id="baseCurrencyInput" name="baseCurrency" required #baseCurrency="ngModel"
-            [(ngModel)]="selectedParams.baseCurrency">
-      <option value="" disabled selected>...</option>
-      <option *ngFor="let currency of currencies">{{currency.currencyCode}}</option>
-    </select>
-  </div>
-
-  <div class="input-group mr-sm-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text"> Target Currency</div>
-    </div>
-    <select class="form-control" id="targetCurrencyInput" name="targetCurrency" required #targetCurrency="ngModel"
-            [(ngModel)]="selectedParams.targetCurrency">
-      <option value="" disabled selected>...</option>
-      <option *ngFor="let currency of currencies">{{currency.currencyCode}}</option>
-    </select>
-  </div>
-
-  <div class="input-group mr-sm-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text"> From</div>
-    </div>
-    <input id="fromInput" name="from" type="datetime-local" class="form-control" [(ngModel)]="selectedParams.from"
-           required>
-  </div>
-
-  <div class="input-group mr-sm-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text"> To</div>
-    </div>
-    <input id="toInput" name="to" type="datetime-local" class="form-control" [(ngModel)]="selectedParams.to" required>
-  </div>
-
-  <div class="input-group mr-sm-2">
-    <button type="submit" class="btn btn-primary" [disabled]="!f.valid"> Display</button>
-  </div>
-
-</form>
-
-<div>
-  <div style="margin-top: 15px; min-height: 500px; min-width: 200px;" *ngIf="graphData.length > 0">
-    <ngx-charts-line-chart *ngIf="graphData.length > 0"
-                           [results]="graphData"
-                           [autoScale]="true"
-                           [timeline]="false"
-                           [xAxis]="true"
-                           [xAxisLabel]="'Datetime'"
-                           [showXAxisLabel]="true"
-                           [yAxis]="true"
-                           [yAxisLabel]="'Currency Rate'"
-                           [showYAxisLabel]="true"
-                           [legend]="true"
-    ></ngx-charts-line-chart>
-  </div>
-  <div *ngIf="graphData.length == 0"
-       style="text-align: center; display: flex; justify-content: center; align-items: center; min-height: 500px; min-width: 200px;">
-    <h5>No currencies selected.</h5>
-  </div>
-</div>
