@@ -18,6 +18,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {AdminPanelComponent} from './admin-panel/admin-panel.component';
 import { TradeCurrencyComponent } from './trade-currency/trade-currency.component';
+import { AddFundsComponent } from './add-funds/add-funds.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -36,7 +37,8 @@ export function tokenGetter() {
     AdminPanelComponent,
     CurrencyRatesGraphComponent,
     OperationHistoryComponent,
-    TradeCurrencyComponent
+    TradeCurrencyComponent,
+    AddFundsComponent
   ],
   imports: [
     BrowserModule,

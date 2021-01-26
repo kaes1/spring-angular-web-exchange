@@ -8,7 +8,8 @@ import {Observable} from 'rxjs';
 })
 export class ApiService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   get<T>(path: string, params?: HttpParams): Observable<T> {
     return this.http.get<T>(path, {params}).pipe(

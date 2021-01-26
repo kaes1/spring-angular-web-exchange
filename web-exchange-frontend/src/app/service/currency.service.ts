@@ -1,39 +1,49 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {ApiService} from '../api/api.service';
 import {ApiEndpoints} from '../api/api-endpoints';
-import {interval, Observable, ReplaySubject} from 'rxjs';
+import {interval, Observable, ReplaySubject, Subscription} from 'rxjs';
 import {UserCurrencyBalanceModel} from '../model/user-currency-balance.model';
 import {LatestCurrencyRateList} from '../model/latest-currency-rate-list.model';
 import {HttpParams} from '@angular/common/http';
 import {CurrencyRateHistory} from '../model/currency-rate-history.model';
 import {Currency} from '../model/currency.model';
-import {FunctionEnum} from '../model/function-enum.model';
 import {TradeCurrencyRequest} from '../model/trade-currency-request.model';
+import {map, tap} from 'rxjs/operators';
+import {AddFundsRequest} from '../model/add-funds-request.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CurrencyService {
+export class CurrencyService implements OnDestroy {
 
   private userCurrencyBalanceListSubject = new ReplaySubject<UserCurrencyBalanceModel[]>(1);
-  private latestCurrencyRateListForWalletSubject = new ReplaySubject<LatestCurrencyRateList>(1);
-  private latestCurrencyRateListForTradeSubject = new ReplaySubject<LatestCurrencyRateList>(1);
+  private latestCurrencyRateListSubject = new ReplaySubject<LatestCurrencyRateList>(1);
   private currencyRateHistorySubject = new ReplaySubject<CurrencyRateHistory>(1);
   private currenciesSubject = new ReplaySubject<Currency[]>(1);
+  private userBaseCurrencySubject = new ReplaySubject<Currency>(1);
 
-  userBaseCurrency = 'CZK';
+  latestCurrencyRateSubscription: Subscription = new Subscription();
 
   constructor(private apiService: ApiService) {
     this.fetchCurrencies();
+    this.setBaseCurrency({currencyCode: 'EUR'});
+    this.userBaseCurrencySubject.subscribe(newCurrency => {
+      this.latestCurrencyRateSubscription.unsubscribe();
+      this.fetchLatestCurrencyRateList(newCurrency.currencyCode);
+      const source = interval(10000);
+      this.latestCurrencyRateSubscription = source.subscribe(() => {
+        this.fetchLatestCurrencyRateList(newCurrency.currencyCode);
+      });
 
-    let params = new HttpParams();
-    params = params.append('baseCurrencyCode', this.userBaseCurrency);
-
-    this.fetchLatestCurrencyRateList(FunctionEnum.wallet, params);
-    const source = interval(10000);
-    source.subscribe(() => {
-      this.fetchLatestCurrencyRateList(FunctionEnum.wallet, params);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.latestCurrencyRateSubscription.unsubscribe();
+  }
+
+  public setBaseCurrency(newBaseCurrency: Currency) {
+    this.userBaseCurrencySubject.next(newBaseCurrency);
   }
 
   public getUserCurrencyBalanceList(): Observable<UserCurrencyBalanceModel[]> {
@@ -47,26 +57,29 @@ export class CurrencyService {
     });
   }
 
-  public getLatestCurrencyRateList(func: FunctionEnum): Observable<LatestCurrencyRateList> {
-    if (func == FunctionEnum.wallet)
-      return this.latestCurrencyRateListForWalletSubject.asObservable();
-    else
-      return this.latestCurrencyRateListForTradeSubject.asObservable();
+  public getLatestCurrencyRateBetween(baseCurrency: string, targetCurrency: string) {
+    let params = new HttpParams();
+    params = params.append('baseCurrencyCode', baseCurrency);
+    params = params.append('targetCurrencyCode', targetCurrency);
 
+    return this.apiService.get<LatestCurrencyRateList>(ApiEndpoints.CURRENCY_RATES_LATEST, params).pipe(
+      map(latestCurrencyList => {
+        return latestCurrencyList.currencyRates.find(x => x.targetCurrencyCode == targetCurrency);
+      })
+    );
   }
 
-  public fetchLatestCurrencyRateList(func: FunctionEnum, baseCurrency: HttpParams) {
-    this.apiService.get<LatestCurrencyRateList>(ApiEndpoints.CURRENCY_RATES_LATEST, baseCurrency).subscribe((latestCurrencyRateList: LatestCurrencyRateList) => {
-      console.log(latestCurrencyRateList);
-      if (func == FunctionEnum.wallet)
-        this.latestCurrencyRateListForWalletSubject.next(latestCurrencyRateList);
-      else if (func == FunctionEnum.tradeCurrency)
-        this.latestCurrencyRateListForTradeSubject.next(latestCurrencyRateList);
+  public getLatestCurrencyRateList(): Observable<LatestCurrencyRateList> {
+    return this.latestCurrencyRateListSubject.asObservable();
+  }
+
+  public fetchLatestCurrencyRateList(baseCurrency: string) {
+    let params = new HttpParams();
+    params = params.append('baseCurrencyCode', baseCurrency);
+
+    this.apiService.get<LatestCurrencyRateList>(ApiEndpoints.CURRENCY_RATES_LATEST, params).subscribe((latestCurrencyRateList: LatestCurrencyRateList) => {
+      this.latestCurrencyRateListSubject.next(latestCurrencyRateList);
     });
-  }
-
-  public getCurrencyRateHistory(): Observable<CurrencyRateHistory> {
-    return this.currencyRateHistorySubject.asObservable();
   }
 
   public fetchCurrencyRateHistory(params: HttpParams) {
@@ -88,15 +101,19 @@ export class CurrencyService {
   }
 
   public tradeCurrency(model: TradeCurrencyRequest) {
-    return new Observable(observer => {
-      this.apiService.post(ApiEndpoints.OPERATIONS_TRADE_CURRENCY, model)
-        .subscribe(result => {
-          this.fetchUserCurrencyBalanceList();
-          observer.next('Success');
-        }, error => {
-          observer.error(error.error);
-        });
-    });
+    return this.apiService.post(ApiEndpoints.OPERATIONS_TRADE_CURRENCY, model).pipe(
+      tap(response => {
+        this.fetchUserCurrencyBalanceList();
+      })
+    );
+  }
+
+  public addFunds(model: AddFundsRequest) {
+    return this.apiService.post(ApiEndpoints.OPERATIONS_ADD_FUNDS, model).pipe(
+      tap(response => {
+        this.fetchUserCurrencyBalanceList();
+      })
+    );
   }
 
 }
