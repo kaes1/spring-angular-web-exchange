@@ -1,10 +1,10 @@
 export class ApiEndpoints {
   public static readonly REGISTER = 'api/register';
   public static readonly REGISTER_CONFIRMATION = 'api/register/confirm';
-  public static readonly LOGIN = 'api/login';
+  public static readonly AUTH_LOGIN = 'api/auth/login';
+  public static readonly AUTH_REFRESH = 'api/auth/refresh';
 
   public static readonly CURRENCIES = 'api/currencies';
-  public static readonly CURRENCY_DETAILS = 'api/currencies/';
   public static readonly ADMIN_CURRENCY_CONFIGURATION = 'api/currencies/configuration';
   public static readonly ADMIN_CURRENCY_ACTIVATE = 'api/currencies/configuration';
 

@@ -1,4 +1,7 @@
 webexchange:
+  jwt:
+    secret: "WebExchange"
+    durationInSeconds: 3600
   registerConfirmationUrl: "http://localhost:4200/register-confirmation/"
   init:
     currencies: EUR, PLN, CZK, CAD, USD

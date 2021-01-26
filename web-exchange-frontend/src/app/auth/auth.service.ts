@@ -1,20 +1,23 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {ApiService} from '../api/api.service';
 import {LoginRequest} from '../model/login/login-request.model';
 import {LoginResponse} from '../model/login/login-response.model';
-import {Observable, of, ReplaySubject} from 'rxjs';
-import {catchError, tap} from 'rxjs/operators';
+import {interval, Observable, ReplaySubject, Subscription} from 'rxjs';
+import {tap} from 'rxjs/operators';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {ApiEndpoints} from '../api/api-endpoints';
+import {FunctionEnum} from '../model/function-enum.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
 
   private loggedInSubject = new ReplaySubject<boolean>(1);
   private usernameSubject = new ReplaySubject<string>(1);
   private roleSubject = new ReplaySubject<string>(1);
+
+  private refreshSubscription: Subscription = new Subscription();
 
   constructor(private apiService: ApiService,
               private jwtHelper: JwtHelperService) {
@@ -25,6 +28,13 @@ export class AuthService {
     this.loggedInSubject.next(isLoggedIn);
     this.usernameSubject.next(isLoggedIn ? username : undefined);
     this.roleSubject.next(isLoggedIn ? role : undefined);
+
+    const refreshInterval = interval(1000 * 60 * 10);
+    this.refreshSubscription = refreshInterval.subscribe(() => this.refreshToken());
+  }
+
+  ngOnDestroy(): void {
+    this.refreshSubscription.unsubscribe();
   }
 
   public getLoggedIn(): Observable<boolean> {
@@ -49,10 +59,8 @@ export class AuthService {
     const loginRequest: LoginRequest = {
       login, password
     };
-    return this.apiService.post<LoginResponse>(ApiEndpoints.LOGIN, loginRequest).pipe(
+    return this.apiService.post<LoginResponse>(ApiEndpoints.AUTH_LOGIN, loginRequest).pipe(
       tap(response => {
-        console.log('Got response in AuthService!');
-        console.log(response);
         localStorage.setItem('jwt', response.token);
         localStorage.setItem('username', response.username);
         localStorage.setItem('role', response.role);
@@ -63,4 +71,16 @@ export class AuthService {
     );
   }
 
+  public isTokenExpired(): boolean {
+    const token = localStorage.getItem('jwt');
+    return !token || this.jwtHelper.isTokenExpired(token);
+  }
+
+  private refreshToken() {
+    if (!this.isTokenExpired()) {
+      this.apiService.get<LoginResponse>(ApiEndpoints.AUTH_REFRESH).subscribe(response => {
+        localStorage.setItem('jwt', response.token);
+      });
+    }
+  }
 }
