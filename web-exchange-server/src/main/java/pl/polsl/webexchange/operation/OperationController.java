@@ -12,7 +12,6 @@ import pl.polsl.webexchange.operation.tradecurrency.TradeCurrencyResponse;
 import pl.polsl.webexchange.user.User;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController

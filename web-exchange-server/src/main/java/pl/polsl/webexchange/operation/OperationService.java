@@ -3,12 +3,10 @@ package pl.polsl.webexchange.operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.polsl.webexchange.currency.Currency;
-import pl.polsl.webexchange.currency.CurrencyRepository;
 import pl.polsl.webexchange.currency.CurrencyService;
 import pl.polsl.webexchange.currencyrate.CurrencyRate;
-import pl.polsl.webexchange.currencyrate.CurrencyRateRepository;
 import pl.polsl.webexchange.currencyrate.CurrencyRateService;
-import pl.polsl.webexchange.errorhandling.InvalidOperationException;
+import pl.polsl.webexchange.errorhandling.InvalidArgumentException;
 import pl.polsl.webexchange.operation.addfunds.AddFundsOperation;
 import pl.polsl.webexchange.operation.addfunds.AddFundsOperationRepository;
 import pl.polsl.webexchange.operation.addfunds.AddFundsRequest;
@@ -19,7 +17,6 @@ import pl.polsl.webexchange.operation.tradecurrency.TradeCurrencyRequest;
 import pl.polsl.webexchange.operation.tradecurrency.TradeCurrencyResponse;
 import pl.polsl.webexchange.user.User;
 import pl.polsl.webexchange.usercurrencybalance.UserCurrencyBalance;
-import pl.polsl.webexchange.usercurrencybalance.UserCurrencyBalanceRepository;
 import pl.polsl.webexchange.usercurrencybalance.UserCurrencyBalanceService;
 
 import javax.transaction.Transactional;
@@ -63,7 +60,7 @@ public class OperationService {
         UserCurrencyBalance soldBalance = userCurrencyBalanceService.getUserCurrencyBalance(user, soldCurrency);
 
         if (soldBalance.getAmount().compareTo(tradeCurrencyRequest.getSellAmount()) < 0) {
-            throw new InvalidOperationException("Not enough funds to sell currency");
+            throw new InvalidArgumentException("Not enough funds to sell currency");
         }
 
         BigDecimal soldAmount = tradeCurrencyRequest.getSellAmount();

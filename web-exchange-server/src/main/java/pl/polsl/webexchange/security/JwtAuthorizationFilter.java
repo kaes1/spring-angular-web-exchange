@@ -2,6 +2,7 @@ package pl.polsl.webexchange.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,20 +16,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static final String TOKEN_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
-    private static final String SECRET = "Secret";
 
+    private final String jwtSecret;
     private final UserDetailsService userDetailsService;
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
-                                  UserDetailsService userDetailsService) {
+                                  UserDetailsService userDetailsService,
+                                  String jwtSecret) {
         super(authenticationManager);
         this.userDetailsService = userDetailsService;
+        this.jwtSecret = jwtSecret;
     }
 
     @Override
@@ -48,13 +50,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String token = header.replace(TOKEN_PREFIX, "");
 
         try {
-            String username = JWT.require(Algorithm.HMAC512(SECRET))
+            String username = JWT.require(Algorithm.HMAC512(jwtSecret))
                     .build()
                     .verify(token)
                     .getSubject();
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        } catch (TokenExpiredException exception) {
+        } catch (TokenExpiredException | SignatureVerificationException exception) {
             return null;
         }
     }

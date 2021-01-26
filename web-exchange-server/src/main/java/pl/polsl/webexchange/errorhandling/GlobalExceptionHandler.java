@@ -43,8 +43,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, error, new HttpHeaders(), httpStatus, request);
     }
 
-    @ExceptionHandler(InvalidOperationException.class)
-    protected ResponseEntity<Object> handleInvalidOperationException(InvalidOperationException ex, WebRequest request) {
+    @ExceptionHandler(InvalidArgumentException.class)
+    protected ResponseEntity<Object> handleInvalidArgumentException(InvalidArgumentException ex, WebRequest request) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(new Date())

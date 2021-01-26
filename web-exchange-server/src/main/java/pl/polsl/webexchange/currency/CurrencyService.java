@@ -2,17 +2,14 @@ package pl.polsl.webexchange.currency;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import pl.polsl.webexchange.currencyrate.CurrencyRateUpdater;
 import pl.polsl.webexchange.currencyrate.ExchangeRateApiService;
-import pl.polsl.webexchange.errorhandling.InvalidOperationException;
+import pl.polsl.webexchange.errorhandling.InvalidArgumentException;
 import pl.polsl.webexchange.errorhandling.NotFoundException;
 import pl.polsl.webexchange.errorhandling.NotUniqueException;
 
 import javax.transaction.Transactional;
-import javax.xml.bind.ValidationException;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +30,7 @@ public class CurrencyService {
         List<String> validCurrencyCodes = exchangeRateApiService.getAllValidCurrencyCodes();
 
         if (!validCurrencyCodes.contains(uppercaseCurrencyCode)) {
-            throw new InvalidOperationException("Currency " + uppercaseCurrencyCode + " is not a valid currency");
+            throw new InvalidArgumentException("Currency " + uppercaseCurrencyCode + " is not a valid currency");
         }
 
         Currency currency = new Currency(uppercaseCurrencyCode);

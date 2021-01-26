@@ -1,11 +1,11 @@
 package pl.polsl.webexchange.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +17,9 @@ import pl.polsl.webexchange.user.Role;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Value("${webexchange.jwt.secret}")
+    private String JWT_SECRET;
 
     private final UserDetailsService userDetailsService;
 
@@ -38,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").hasAuthority(Role.ROLE_USER.name())
                 .anyRequest().permitAll()
                 .and()
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailsService))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailsService, JWT_SECRET))
                 .csrf().disable();
     }
 

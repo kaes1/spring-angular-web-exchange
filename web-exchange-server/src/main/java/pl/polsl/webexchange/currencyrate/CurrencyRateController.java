@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.polsl.webexchange.currency.Currency;
 import pl.polsl.webexchange.currency.CurrencyService;
+import pl.polsl.webexchange.errorhandling.InvalidArgumentException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,6 +40,10 @@ public class CurrencyRateController {
         LocalDateTime toDate = to != null
                 ? to
                 : LocalDate.now().plusDays(1).atStartOfDay();
+
+        if (toDate.isBefore(fromDate)) {
+            throw new InvalidArgumentException("End date cannot be before Start date.");
+        }
         
         List<CurrencyRate> currencyRates = currencyRateService.getCurrencyRatesBetween(baseCurrency, targetCurrency, fromDate, toDate);
         List<CurrencyRateDTO> currencyRateDTOs = toDTOs(currencyRates);
