@@ -2,12 +2,13 @@
 <div class="center-content" style="display: flex; flex-wrap: wrap">
   <div class="card">
     <div class="card-body">
-      <form #f="ngForm" (ngSubmit)="fetchGraphInInterval()" class="form-inline my-3">
+      <form #f="ngForm" class="form-inline my-3">
         <div class="input-group mr-sm-2">
           <div class="input-group-prepend">
             <div class="input-group-text">Base Currency</div>
           </div>
-          <select class="form-control" id="baseCurrencyInput" name="baseCurrency" (change)="onBaseCurrencySelected()" required #baseCurrency="ngModel"
+          <select class="form-control" id="baseCurrencyInput" name="baseCurrency" (change)="onBaseCurrencySelected()"
+                  required #baseCurrency="ngModel"
                   [(ngModel)]="selectedParams.baseCurrency">
             <option value="" disabled selected>---</option>
             <option *ngFor="let currency of currencies">{{currency.currencyCode}}</option>
@@ -17,7 +18,8 @@
           <div class="input-group-prepend">
             <div class="input-group-text"> Target Currency</div>
           </div>
-          <select class="form-control" id="targetCurrencyInput" name="targetCurrency" (change)="onTargetCurrencySelected()" required #targetCurrency="ngModel"
+          <select class="form-control" id="targetCurrencyInput" name="targetCurrency"
+                  (change)="onTargetCurrencySelected()" required #targetCurrency="ngModel"
                   [(ngModel)]="selectedParams.targetCurrency">
             <option value="" disabled selected>---</option>
             <option *ngFor="let currency of currencies">{{currency.currencyCode}}</option>
@@ -27,18 +29,22 @@
           <div class="input-group-prepend">
             <div class="input-group-text">From</div>
           </div>
-          <input id="fromInput" name="from" #from="ngModel" type="datetime-local" (change)="onFromSelected()" class="form-control" [(ngModel)]="selectedParams.from"
+          <input id="fromInput" name="from" #from="ngModel" type="datetime-local" (change)="onFromSelected()"
+                 class="form-control" [(ngModel)]="selectedParams.from"
                  required>
         </div>
         <div class="input-group mr-sm-2">
           <div class="input-group-prepend">
             <div class="input-group-text">To</div>
           </div>
-          <input id="toInput" name="to" #to="ngModel" type="datetime-local" (change)="onToSelected()" class="form-control" [(ngModel)]="selectedParams.to"
+          <input id="toInput" name="to" #to="ngModel" type="datetime-local" (change)="onToSelected()"
+                 class="form-control" [(ngModel)]="selectedParams.to"
                  required>
         </div>
         <div class="input-group mr-sm-2">
-          <button type="submit" class="btn btn-primary" [disabled]="!f.valid || baseCurrency.value == targetCurrency.value || from.value >= to.value">Display</button>
+          <button type="submit" class="btn btn-primary" (click)="onSubmit()"
+                  [disabled]="!f.valid || baseCurrency.value == targetCurrency.value || from.value >= to.value">Display
+          </button>
         </div>
       </form>
       <div>

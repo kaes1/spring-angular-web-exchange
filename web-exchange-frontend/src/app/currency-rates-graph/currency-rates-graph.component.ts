@@ -14,6 +14,7 @@ export class CurrencyRatesGraphComponent implements OnInit {
   graphData: GraphSeries[] = [];
   currencies: Currency[] = [];
   selectedParams = {baseCurrency: '', targetCurrency: '', from: '', to: ''};
+  displayedGraphParams = {baseCurrency: '', targetCurrency: '', from: '', to: ''};
 
   constructor(private graphService: GraphService,
               private currencyService: CurrencyService) {
@@ -34,10 +35,10 @@ export class CurrencyRatesGraphComponent implements OnInit {
   }
 
   fetchGraphInInterval() {
-    this.fetchGraph(this.selectedParams.baseCurrency, this.selectedParams.targetCurrency, this.selectedParams.from, this.selectedParams.to);
+    this.fetchGraph(this.displayedGraphParams.baseCurrency, this.displayedGraphParams.targetCurrency, this.displayedGraphParams.from, this.displayedGraphParams.to);
     const source = interval(10000);
     source.subscribe(() => {
-      this.fetchGraph(this.selectedParams.baseCurrency, this.selectedParams.targetCurrency, this.selectedParams.from, this.selectedParams.to);
+      this.fetchGraph(this.displayedGraphParams.baseCurrency, this.displayedGraphParams.targetCurrency, this.displayedGraphParams.from, this.displayedGraphParams.to);
     });
   }
 
@@ -63,6 +64,14 @@ export class CurrencyRatesGraphComponent implements OnInit {
     if (this.selectedParams.from >= this.selectedParams.to) {
       this.selectedParams.from = '';
     }
+  }
+
+  onSubmit() {
+    this.displayedGraphParams.baseCurrency = this.selectedParams.baseCurrency;
+    this.displayedGraphParams.targetCurrency = this.selectedParams.targetCurrency;
+    this.displayedGraphParams.from = this.selectedParams.from;
+    this.displayedGraphParams.to = this.selectedParams.to;
+    this.fetchGraphInInterval();
   }
 
 }
