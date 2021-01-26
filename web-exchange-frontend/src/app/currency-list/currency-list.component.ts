@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CurrencyService} from '../service/currency.service';
-import {CurrencyRate} from '../model/currency-rate.model';
+import {combineLatest} from 'rxjs';
+import {CurrencyListEntry} from '../model/currency-list-entry.model';
 
 @Component({
   selector: 'app-currency-list',
@@ -9,7 +10,7 @@ import {CurrencyRate} from '../model/currency-rate.model';
 })
 export class CurrencyListComponent implements OnInit {
 
-  entries: CurrencyRate[] = [];
+  entries: CurrencyListEntry[] = [];
   baseCurrency: string = '';
 
   constructor(private currencyService: CurrencyService) {
@@ -19,9 +20,25 @@ export class CurrencyListComponent implements OnInit {
     this.currencyService.getBaseCurrency().subscribe(baseCurrency => {
       this.baseCurrency = baseCurrency.currencyCode;
     });
-    this.currencyService.getLatestCurrencyRateList().subscribe(list => {
-      this.entries = list.currencyRates;
-    });
+    this.getEntries();
+  }
+
+  getEntries() {
+    combineLatest([this.currencyService.getCurrencies(), this.currencyService.getLatestCurrencyRates()]).subscribe(
+      ([currencies, latestCurrencyRates]) => {
+        this.entries = [];
+
+        currencies.forEach(currency => {
+          let currencyRate = latestCurrencyRates.currencyRates.find(el => el.targetCurrencyCode == currency.currencyCode);
+
+          let entry: CurrencyListEntry = {
+            currencyCode: currency.currencyCode,
+            rate: currencyRate?.rate || 1
+          };
+          this.entries.push(entry);
+        });
+      }
+    );
   }
 
 }

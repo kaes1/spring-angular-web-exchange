@@ -1,6 +1,6 @@
 import {CurrencyRate} from "./currency-rate.model";
 
-export interface LatestCurrencyRateList {
+export interface LatestCurrencyRates {
   baseCurrencyCode: string;
   currencyRates: CurrencyRate[];
 }
