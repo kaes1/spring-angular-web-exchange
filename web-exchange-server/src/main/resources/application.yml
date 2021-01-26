@@ -9,8 +9,10 @@ webexchange:
       email: admin@email.com
       username: admin
       password: admin
-
-
+    user:
+      email: tester@mail.com
+      username: tester
+      password: tester
 
 spring:
   datasource:

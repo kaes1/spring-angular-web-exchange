@@ -19,7 +19,7 @@ public class CurrencyRateUpdater {
     private final CurrencyRateRepository currencyRateRepository;
     private final ExchangeRateApiService exchangeRateApiService;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 */5 * * * *")
     public void updateCurrencyRates() {
         System.out.println("Updating currency rates now! " + LocalDateTime.now());
         currencyRepository.findAll().forEach(this::updateCurrencyRates);

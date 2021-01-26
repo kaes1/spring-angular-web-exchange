@@ -7,6 +7,7 @@ import pl.polsl.webexchange.currency.CurrencyService;
 import pl.polsl.webexchange.currencyrate.CurrencyRate;
 import pl.polsl.webexchange.currencyrate.CurrencyRateService;
 import pl.polsl.webexchange.errorhandling.InvalidArgumentException;
+import pl.polsl.webexchange.errorhandling.InvalidCurrencyRateException;
 import pl.polsl.webexchange.operation.addfunds.AddFundsOperation;
 import pl.polsl.webexchange.operation.addfunds.AddFundsOperationRepository;
 import pl.polsl.webexchange.operation.addfunds.AddFundsRequest;
@@ -56,6 +57,10 @@ public class OperationService {
 
         CurrencyRate currencyRate = currencyRateService.getLatestCurrencyRate(soldCurrency, boughtCurrency);
 
+        if (!currencyRate.getRate().equals(tradeCurrencyRequest.getRate())){
+            throw new InvalidCurrencyRateException("Currency rate is not the latest rate");
+        }
+
         UserCurrencyBalance boughtBalance = userCurrencyBalanceService.getUserCurrencyBalance(user, boughtCurrency);
         UserCurrencyBalance soldBalance = userCurrencyBalanceService.getUserCurrencyBalance(user, soldCurrency);
 
@@ -89,6 +94,10 @@ public class OperationService {
 
         LocalDateTime fromDateTime = from.atStartOfDay();
         LocalDateTime toDateTime = to.plusDays(1).atStartOfDay();
+
+        if (toDateTime.isBefore(fromDateTime)) {
+            throw new InvalidArgumentException("End date cannot be before Start date");
+        }
 
         List<Operation> operations = operationRepository.findAllByUserAndDateTimeBetweenOrderByDateTimeDesc(user, fromDateTime, toDateTime);
         return operations.stream()
