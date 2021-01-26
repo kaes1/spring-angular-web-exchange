@@ -2,7 +2,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {ApiService} from '../api/api.service';
 import {ApiEndpoints} from '../api/api-endpoints';
 import {interval, Observable, ReplaySubject, Subscription} from 'rxjs';
-import {UserCurrencyBalanceModel} from '../model/user-currency-balance.model';
+import {UserCurrencyBalance} from '../model/user-currency-balance.model';
 import {LatestCurrencyRateList} from '../model/latest-currency-rate-list.model';
 import {HttpParams} from '@angular/common/http';
 import {CurrencyRateHistory} from '../model/currency-rate-history.model';
@@ -16,7 +16,7 @@ import {AddFundsRequest} from '../model/add-funds-request.model';
 })
 export class CurrencyService implements OnDestroy {
 
-  private userCurrencyBalanceListSubject = new ReplaySubject<UserCurrencyBalanceModel[]>(1);
+  private userCurrencyBalanceListSubject = new ReplaySubject<UserCurrencyBalance[]>(1);
   private latestCurrencyRateListSubject = new ReplaySubject<LatestCurrencyRateList>(1);
   private currencyRateHistorySubject = new ReplaySubject<CurrencyRateHistory>(1);
   private currenciesSubject = new ReplaySubject<Currency[]>(1);
@@ -50,12 +50,12 @@ export class CurrencyService implements OnDestroy {
     return this.userBaseCurrencySubject.asObservable();
   }
 
-  public getUserCurrencyBalanceList(): Observable<UserCurrencyBalanceModel[]> {
+  public getUserCurrencyBalanceList(): Observable<UserCurrencyBalance[]> {
     return this.userCurrencyBalanceListSubject.asObservable();
   }
 
   public fetchUserCurrencyBalanceList() {
-    this.apiService.get<UserCurrencyBalanceModel[]>(ApiEndpoints.USER_CURRENCY_BALANCE).subscribe((userCurrencyBalanceList: UserCurrencyBalanceModel[]) => {
+    this.apiService.get<UserCurrencyBalance[]>(ApiEndpoints.USER_CURRENCY_BALANCE).subscribe((userCurrencyBalanceList: UserCurrencyBalance[]) => {
       console.log(userCurrencyBalanceList);
       this.userCurrencyBalanceListSubject.next(userCurrencyBalanceList);
     });

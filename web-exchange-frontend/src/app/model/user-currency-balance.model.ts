@@ -1,4 +1,4 @@
-export interface UserCurrencyBalanceModel {
+export interface UserCurrencyBalance {
   currencyCode: string;
   amount: number;
 }

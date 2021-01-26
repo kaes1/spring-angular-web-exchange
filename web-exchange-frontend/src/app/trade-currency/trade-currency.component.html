@@ -7,79 +7,121 @@
   </div>
   <div class="modal-body">
     <form #f="ngForm">
+
+      <div class="row mb-2">
+        <h6 class="col center-content"> Selling </h6>
+        <h6 class="col center-content"> Buying </h6>
+      </div>
+
       <div class="row">
-        <div class="form-group col">
-          <div class="input-group mb-2">
+        <div class="col form-group">
+          <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">Sell currency</span>
+              <span class="input-group-text"> Currency </span>
             </div>
-            <select class="form-control" id="soldCurrencyInput" name="soldCurrency" (change)="onCurrencySelected()"
-                    required #soldCurrency="ngModel"
-                    [(ngModel)]="model.soldCurrencyCode">
-              <option *ngFor="let currency of currencies">{{currency.currencyCode}}</option>
+            <select class="form-control" id="soldCurrencyInput" name="soldCurrency" (change)="onSoldCurrencySelected()" #soldCurrency="ngModel" [(ngModel)]="model.soldCurrencyCode" required>
+              <option *ngFor="let currency of allAvailableCurrencies">{{currency.currencyCode}}</option>
             </select>
-            <div class="input-group-append">
-            </div>
           </div>
-          <div *ngIf="(soldCurrency.dirty || soldCurrency.touched)" class="invalid-feedback d-block">
-            <div *ngIf="soldCurrency.invalid && soldCurrency.errors?.required">Sold currency is required</div>
+          <div *ngIf="(soldCurrency.dirty || soldCurrency.touched) && soldCurrency.invalid" class="invalid-feedback d-block">
+            <div *ngIf="soldCurrency.errors?.required">Sold currency is required</div>
           </div>
         </div>
-        <div class="form-group col">
-          <div class="input-group mb-2">
+        <div class="col form-group">
+          <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">in amount</span>
+              <span class="input-group-text"> Currency </span>
             </div>
-            <input class="form-control" type="number" min="1" id="quantityInput" name="quantity" required
-                   #quantity="ngModel"
-                   [(ngModel)]="model.sellAmount">
-            <div class="input-group-append">
-            </div>
+            <select class="form-control" id="boughtCurrencyInput" name="boughtCurrency" (change)="onBoughtCurrencySelected()" #boughtCurrency="ngModel" [(ngModel)]="model.boughtCurrencyCode" required>
+              <option *ngFor="let currency of allAvailableCurrencies">{{currency.currencyCode}}</option>
+            </select>
           </div>
-          <div *ngIf="(quantity.dirty || quantity.touched)" class="invalid-feedback d-block">
-            <div *ngIf="quantity.invalid && quantity.errors?.required">Quantity is required</div>
-            <div *ngIf="quantity.value <= 0">Only numbers greater than 0 allowed</div>
+          <div *ngIf="(boughtCurrency.dirty || boughtCurrency.touched) && boughtCurrency.invalid" class="invalid-feedback d-block">
+            <div *ngIf="boughtCurrency.errors?.required"> Bought currency is required</div>
           </div>
         </div>
       </div>
+
       <div class="row">
-        <div class="form-group col">
-          <div class="input-group mb-2">
+        <div class="col form-group">
+          <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">Buy currency</span>
+              <span class="input-group-text"> Amount </span>
             </div>
-            <select class="form-control" id="boughtCurrencyInput" name="boughtCurrency" (change)="onCurrencySelected()"
-                    required #boughtCurrency="ngModel"
-                    [(ngModel)]="model.boughtCurrencyCode">
-              <option *ngFor="let currency of currencies">{{currency.currencyCode}}</option>
-            </select>
-            <div class="input-group-append">
-            </div>
+            <input class="form-control" type="number" min="1" id="quantityInput" name="quantity" (change)="onSellAmountChange()" #quantity="ngModel" [(ngModel)]="model.sellAmount" required>
           </div>
-          <div *ngIf="(boughtCurrency.dirty || boughtCurrency.touched)" class="invalid-feedback d-block">
-            <div *ngIf="boughtCurrency.invalid && boughtCurrency.errors?.required"> Bought currency is required</div>
-            <div *ngIf="soldCurrency.value == boughtCurrency.value"> Sold currency and bought currency must be different
-            </div>
+          <div *ngIf="(quantity.dirty || quantity.touched) && (quantity.invalid || quantity.value <= 0)" class="invalid-feedback d-block">
+            <div *ngIf="quantity.errors?.required">Amount is required</div>
+            <div *ngIf="quantity.value <= 0">Amount must be greater than 0</div>
           </div>
         </div>
-        <div class="col">
-          <div class="input-group mb-2">
+        <div class="col form-group">
+          <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">in amount</span>
+              <span class="input-group-text"> Amount </span>
             </div>
-            <input class="form-control" type="text" readonly id="calculatedCost"
-                   [value]="(model.sellAmount * model.rate |  number:'1.4-4')">
-            <div class="input-group-append">
-            </div>
+            <input class="form-control" type="text" readonly id="calculatedCost" [value]="(model.sellAmount * model.rate |  number:'1.4-4')">
           </div>
         </div>
       </div>
-      <p *ngIf="failed" class="text-danger">{{failedMessage}}</p>
+
+      <div class="row mb-3" *ngIf="!model.soldCurrencyCode || !model.boughtCurrencyCode">
+        <div class="col form-group">
+          <label class="col col-form-label px-2">Select both currencies to view Exchange Rate</label>
+        </div>
+      </div>
+
+      <div class="row mb-3" *ngIf="model.soldCurrencyCode && model.boughtCurrencyCode">
+        <div class="col form-group">
+          <label class="col col-form-label px-2">{{model.soldCurrencyCode}} to {{model.boughtCurrencyCode}} Exchange Rate:</label>
+        </div>
+        <div class="col input-group">
+          <input class="form-control" readonly id="currencyRate" [value]="this.model.rate |  number:'1.4-4'">
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <h6 class="col center-content"> Balance change </h6>
+        <h6 class="col center-content"> Balance change </h6>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"> Before </span>
+          </div>
+          <input class="form-control" readonly id="sellingBalanceBefore" [value]="sellingBalanceBefore | number:'1.4-4'">
+        </div>
+        <div class="col input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"> Before </span>
+          </div>
+          <input class="form-control" readonly id="buyingBalanceBefore" [value]="buyingBalanceBefore |  number:'1.4-4'">
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"> After </span>
+          </div>
+          <input class="form-control" readonly id="sellingBalanceAfter" [value]="sellingBalanceAfter |  number:'1.4-4'">
+        </div>
+        <div class="col input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"> After </span>
+          </div>
+          <input class="form-control" readonly id="buyingBalanceAfter" [value]="buyingBalanceAfter |  number:'1.4-4'">
+        </div>
+      </div>
+
+      <p *ngIf="failed" class="text-danger center-content my-1">{{failedMessage}}</p>
+      <p *ngIf="outdatedCurrencyRateDetected" class="text-info center-content my-1">Exchange Rate has changed, do you still want to trade?</p>
     </form>
   </div>
   <div class="modal-footer">
     <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
-    <button class="btn btn-primary" ngbAutofocus (click)="onSubmit()"
+    <button class="btn btn-primary" (click)="onSubmit()"
             [disabled]="!f.valid || quantity.value <= 0 || soldCurrency.value == boughtCurrency.value">Confirm
     </button>
   </div>
