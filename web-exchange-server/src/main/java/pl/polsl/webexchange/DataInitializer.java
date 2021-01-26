@@ -28,6 +28,14 @@ public class DataInitializer implements ApplicationRunner {
     private String adminUsername;
     @Value("${webexchange.init.admin.password}")
     private String adminPassword;
+
+    @Value("${webexchange.init.user.email}")
+    private String userEmail;
+    @Value("${webexchange.init.user.username}")
+    private String userUsername;
+    @Value("${webexchange.init.user.password}")
+    private String userPassword;
+
     @Value("${webexchange.init.currencies}")
     private String[] initialCurrencies;
 
@@ -37,7 +45,7 @@ public class DataInitializer implements ApplicationRunner {
         admin.activateAccount();
         admin = userRepository.save(admin);
 
-        User user = new User("aaa@mail.com", "aaa", passwordEncoder.encode("aaa"), Role.ROLE_USER);
+        User user = new User(userEmail, userUsername, passwordEncoder.encode(userPassword), Role.ROLE_USER);
         user.activateAccount();
         user = userRepository.save(user);
 
