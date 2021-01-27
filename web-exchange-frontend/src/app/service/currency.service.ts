@@ -20,20 +20,20 @@ export class CurrencyService implements OnDestroy {
   private latestCurrencyRatesSubject = new ReplaySubject<LatestCurrencyRates>(1);
   private currencyRateHistorySubject = new ReplaySubject<CurrencyRateHistory>(1);
   private currenciesSubject = new ReplaySubject<Currency[]>(1);
-  private userBaseCurrencySubject = new ReplaySubject<Currency>(1);
+  private userBaseCurrencySubject = new ReplaySubject<string>(1);
 
   latestCurrencyRateSubscription: Subscription = new Subscription();
 
   constructor(private apiService: ApiService) {
     this.fetchCurrencies();
-    this.setBaseCurrency({currencyCode: 'EUR'});
+    this.setBaseCurrency('EUR');
 
     this.userBaseCurrencySubject.subscribe(newCurrency => {
       this.latestCurrencyRateSubscription.unsubscribe();
-      this.fetchLatestCurrencyRateList(newCurrency.currencyCode);
+      this.fetchLatestCurrencyRateList(newCurrency);
       const source = interval(10000);
       this.latestCurrencyRateSubscription = source.subscribe(() => {
-        this.fetchLatestCurrencyRateList(newCurrency.currencyCode);
+        this.fetchLatestCurrencyRateList(newCurrency);
       });
     });
   }
@@ -42,11 +42,11 @@ export class CurrencyService implements OnDestroy {
     this.latestCurrencyRateSubscription.unsubscribe();
   }
 
-  public setBaseCurrency(newBaseCurrency: Currency) {
+  public setBaseCurrency(newBaseCurrency: string) {
     this.userBaseCurrencySubject.next(newBaseCurrency);
   }
 
-  public getBaseCurrency(): Observable<Currency> {
+  public getBaseCurrency(): Observable<string> {
     return this.userBaseCurrencySubject.asObservable();
   }
 

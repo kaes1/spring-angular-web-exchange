@@ -28,7 +28,7 @@ export class NavMenuComponent implements OnInit {
     this.authService.getLoggedIn().subscribe(loggedIn => this.loggedIn = loggedIn);
     this.authService.getUsername().subscribe(username => this.username = username);
     this.authService.getRole().subscribe(role => this.isAdmin = role === 'ROLE_ADMIN');
-    this.currencyService.getBaseCurrency().subscribe(baseCurrency => this.baseCurrency = baseCurrency.currencyCode);
+    this.currencyService.getBaseCurrency().subscribe(baseCurrency => this.baseCurrency = baseCurrency);
     this.currencyService.getCurrencies().subscribe(currencies => this.currencies = currencies);
   }
 
@@ -37,7 +37,7 @@ export class NavMenuComponent implements OnInit {
   }
 
   onCurrencySelected() {
-    this.currencyService.setBaseCurrency({currencyCode: this.baseCurrency});
+    this.currencyService.setBaseCurrency(this.baseCurrency);
     this.currencyService.fetchLatestCurrencyRateList(this.baseCurrency);
   }
 

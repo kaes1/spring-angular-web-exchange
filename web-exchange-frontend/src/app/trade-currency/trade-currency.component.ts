@@ -35,7 +35,7 @@ export class TradeCurrencyComponent implements OnInit {
     });
 
     this.currencyService.getBaseCurrency().subscribe(baseCurrency => {
-      this.model.soldCurrencyCode = baseCurrency.currencyCode;
+      this.model.soldCurrencyCode = baseCurrency;
     });
 
     this.currencyService.getUserCurrencyBalanceList().subscribe(userCurrencyBalanceList => {

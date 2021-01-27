@@ -15,6 +15,7 @@ export class CurrencyRatesGraphComponent implements OnInit {
   currencies: Currency[] = [];
   selectedParams = {baseCurrency: '', targetCurrency: '', from: '', to: ''};
   displayedGraphParams = {baseCurrency: '', targetCurrency: '', from: '', to: ''};
+  series: GraphSeries = {series: [], name: ''};
 
   constructor(private graphService: GraphService,
               private currencyService: CurrencyService) {
@@ -29,8 +30,8 @@ export class CurrencyRatesGraphComponent implements OnInit {
   fetchGraph(baseCurrency: string, targetCurrency: string, from: string, to: string) {
     this.graphService.fetchGraphData(baseCurrency, targetCurrency, from, to);
     this.graphService.getGraphData().subscribe(graphSeries => {
-      this.graphData = [];
-      this.graphData.push(graphSeries);
+      this.graphData = [graphSeries];
+      this.series = graphSeries;
     });
   }
 
