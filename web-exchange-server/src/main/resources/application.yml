@@ -3,6 +3,7 @@ webexchange:
   jwtConfig:
     secret: "WebExchange"
     durationInSeconds: 3600
+  init: true
   initialCurrencies:
   - currencyCode: PLN
     country: Poland

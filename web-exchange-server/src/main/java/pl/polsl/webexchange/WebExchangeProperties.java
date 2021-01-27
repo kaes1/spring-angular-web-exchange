@@ -14,6 +14,7 @@ import java.util.List;
 public class WebExchangeProperties {
 
     private List<CurrencyConfig> initialCurrencies;
+    private Boolean init;
     private UserConfig admin;
     private UserConfig user;
     private JwtConfig jwtConfig;
