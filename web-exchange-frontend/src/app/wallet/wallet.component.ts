@@ -24,7 +24,7 @@ export class WalletComponent implements OnInit {
 
   ngOnInit() {
     this.currencyService.getBaseCurrency().subscribe(baseCurrency => {
-      this.baseCurrency = baseCurrency.currencyCode;
+      this.baseCurrency = baseCurrency;
     });
     this.currencyService.fetchUserCurrencyBalanceList();
     this.getWalletEntries();
@@ -43,9 +43,11 @@ export class WalletComponent implements OnInit {
             currencyCode: currency.currencyCode,
             rate: currencyRate?.rate || 1,
             amount: balance?.amount || 0,
+            country: currency.country,
           };
           this.userWalletEntries.push(entry);
         });
+        this.userWalletEntries = this.userWalletEntries.sort((a, b) => a.currencyCode.localeCompare(b.currencyCode));
       }
     );
   }

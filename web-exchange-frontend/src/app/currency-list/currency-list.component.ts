@@ -18,7 +18,7 @@ export class CurrencyListComponent implements OnInit {
 
   ngOnInit(): void {
     this.currencyService.getBaseCurrency().subscribe(baseCurrency => {
-      this.baseCurrency = baseCurrency.currencyCode;
+      this.baseCurrency = baseCurrency;
     });
     this.getEntries();
   }
@@ -33,10 +33,12 @@ export class CurrencyListComponent implements OnInit {
 
           let entry: CurrencyListEntry = {
             currencyCode: currency.currencyCode,
-            rate: currencyRate?.rate || 1
+            rate: currencyRate?.rate || 1,
+            country: currency.country,
           };
           this.entries.push(entry);
         });
+        this.entries = this.entries.sort((a, b) => a.currencyCode.localeCompare(b.currencyCode));
       }
     );
   }

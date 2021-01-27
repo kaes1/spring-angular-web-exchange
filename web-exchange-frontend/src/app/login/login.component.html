@@ -1,4 +1,4 @@
-<div class="center-content" style="margin-bottom: 15px; margin-top: 15px;">
+<div class="center-content" style="margin-bottom: 15px; margin-top: 35px;">
   <h1>Login</h1>
 </div>
 
@@ -7,7 +7,8 @@
 
     <div class="form-group">
       <label for="loginInput">Username or Email:</label>
-      <input id="loginInput" name="login" type="text" class="form-control"  [(ngModel)]="login" #loginInput="ngModel" required>
+      <input id="loginInput" name="login" type="text" class="form-control" [(ngModel)]="login" #loginInput="ngModel"
+             required>
 
       <div *ngIf="loginInput.invalid && (loginInput.dirty || loginInput.touched)" class="invalid-feedback d-block">
         <div *ngIf="loginInput.errors?.required"> Username or Email is required</div>
@@ -17,14 +18,17 @@
 
     <div class="form-group">
       <label for="passwordInput">Password:</label>
-      <input id="passwordInput" name="password" type="password" class="form-control" [(ngModel)]="password" #passwordInput="ngModel" required>
+      <input id="passwordInput" name="password" type="password" class="form-control" [(ngModel)]="password"
+             #passwordInput="ngModel" required>
 
-      <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="invalid-feedback d-block">
+      <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)"
+           class="invalid-feedback d-block">
         <div *ngIf="passwordInput.errors?.required">Password is required</div>
       </div>
     </div>
 
-    <button style="width:100%; max-width: 600px;" type="submit" class="btn btn-primary" [disabled]="!f.valid">Login</button>
+    <button style="width:100%; max-width: 600px;" type="submit" class="btn btn-primary" [disabled]="!f.valid">Login
+    </button>
   </form>
 </div>
 

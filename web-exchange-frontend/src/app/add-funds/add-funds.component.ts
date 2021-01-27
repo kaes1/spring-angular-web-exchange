@@ -26,7 +26,7 @@ export class AddFundsComponent implements OnInit {
       this.currencies = currencies;
     });
     this.currencyService.getBaseCurrency().subscribe(baseCurrency => {
-      this.model.currencyCode = baseCurrency.currencyCode;
+      this.model.currencyCode = baseCurrency;
     });
   }
 
