@@ -5,11 +5,13 @@ import org.springframework.stereotype.Service;
 import pl.polsl.webexchange.currency.Currency;
 import pl.polsl.webexchange.errorhandling.NotFoundException;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CurrencyRateService {
 
     private final CurrencyRateRepository currencyRateRepository;

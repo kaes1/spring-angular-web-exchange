@@ -5,8 +5,11 @@ import org.springframework.stereotype.Service;
 import pl.polsl.webexchange.currency.Currency;
 import pl.polsl.webexchange.user.User;
 
+import javax.transaction.Transactional;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserCurrencyBalanceService {
 
     private final UserCurrencyBalanceRepository userCurrencyBalanceRepository;

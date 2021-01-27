@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OperationService {
 
     private final CurrencyService currencyService;
@@ -38,7 +39,6 @@ public class OperationService {
     private final TradeCurrencyOperationRepository tradeCurrencyOperationRepository;
     private final OperationRepository operationRepository;
 
-    @Transactional
     public AddFundsResponse addFunds(User user, AddFundsRequest addFundsRequest) {
         Currency currency = currencyService.getActiveCurrency(addFundsRequest.getCurrencyCode());
         UserCurrencyBalance userCurrencyBalance = userCurrencyBalanceService.getUserCurrencyBalance(user, currency);
