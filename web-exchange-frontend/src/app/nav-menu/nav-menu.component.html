@@ -35,7 +35,6 @@
     </ul>
 
 
-
     <span class="text-light mx-1" *ngIf="loggedIn">Logged in as: {{username}}</span>
 
     <div class="input-group mx-1" style="width: 205px">
@@ -44,8 +43,9 @@
       </div>
       <select class="form-control bg-dark text-light" id="baseCurrencyInput" name="currency"
               (change)="onCurrencySelected()"
-              [(ngModel)]="baseCurrency" >
-        <option *ngFor="let currency of currencies">{{currency.currencyCode}}</option>
+              [(ngModel)]="baseCurrency">
+        <option *ngFor="let currency of currencies" [value]="currency.currencyCode"
+                [selected]="currency.currencyCode == baseCurrency">{{currency.currencyCode}}</option>
       </select>
     </div>
 
