@@ -1,5 +1,5 @@
 webexchange:
-  registerConfirmationUrl: "http://localhost:4200/register-confirmation/"
+  registerConfirmationUrl: "http://localhost:8080/register-confirmation/"
   jwtConfig:
     secret: "WebExchange"
     durationInSeconds: 3600

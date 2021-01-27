@@ -5,7 +5,7 @@
 
     <groupId>pl.polsl</groupId>
     <artifactId>web-exchange</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>web-exchange</name>
     <description>Projekt zaliczeniowy na OiRPOS i PAI.</description>
@@ -18,8 +18,8 @@
     </parent>
 
     <modules>
-        <module>web-exchange-server</module>
         <module>web-exchange-frontend</module>
+        <module>web-exchange-server</module>
     </modules>
 
 </project>
