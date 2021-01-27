@@ -50,7 +50,7 @@
         </div>
       </form>
       <div>
-        <div style="margin-top: 15px; min-height: 500px; min-width: 200px;" *ngIf="graphData.length > 0">
+        <div style="margin-top: 15px; min-height: 500px; min-width: 200px;" *ngIf="graphData.length > 0 && series.series.length > 0">
           <ngx-charts-line-chart *ngIf="graphData.length > 0"
                                  [results]="graphData"
                                  [autoScale]="true"
@@ -67,6 +67,10 @@
         <div *ngIf="graphData.length == 0"
              style="text-align: center; display: flex; justify-content: center; align-items: center; min-height: 500px; min-width: 200px;">
           <h5>No currencies selected.</h5>
+        </div>
+        <div *ngIf="graphData.length != 0 && series.series.length == 0"
+             style="text-align: center; display: flex; justify-content: center; align-items: center; min-height: 500px; min-width: 200px;">
+          <h5>No data available.</h5>
         </div>
       </div>
     </div>
