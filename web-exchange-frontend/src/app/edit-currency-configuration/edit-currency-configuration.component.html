@@ -1,0 +1,33 @@
+<div *ngIf="model">
+  <div class="modal-header">
+    <h5 class="modal-title">Modify Currency</h5>
+    <button type="button" class="close" (click)="onCancel()">
+      &times;
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #f="ngForm">
+
+      <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="activateInput" name="activate" #activate="ngModel"
+               [(ngModel)]="model.active"
+               [disabled]="initialCurrencyConfig.active" [checked]="model.active">
+        <label class="form-check-label" for="activateInput">Activate</label>
+      </div>
+
+      <div class="form-group">
+        <label for="countriesInput">Country:</label>
+        <input class="form-control" maxlength="30" id="countriesInput" type="text" name="country" #country="ngModel"
+               [(ngModel)]="model.country">
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+    <button class="btn btn-primary" ngbAutofocus (click)="onSubmit()">
+      <span *ngIf="!inProgress">Confirm</span>
+      <span *ngIf="inProgress" class="spinner-border spinner-border-sm" role="status"></span>
+    </button>
+  </div>
+</div>

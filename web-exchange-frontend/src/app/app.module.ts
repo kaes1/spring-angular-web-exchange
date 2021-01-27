@@ -20,6 +20,7 @@ import {AdminPanelComponent} from './admin-panel/admin-panel.component';
 import { TradeCurrencyComponent } from './trade-currency/trade-currency.component';
 import { AddFundsComponent } from './add-funds/add-funds.component';
 import { CurrencyListComponent } from './currency-list/currency-list.component';
+import { EditCurrencyConfigurationComponent } from './edit-currency-configuration/edit-currency-configuration.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -40,7 +41,8 @@ export function tokenGetter() {
     OperationHistoryComponent,
     TradeCurrencyComponent,
     AddFundsComponent,
-    CurrencyListComponent
+    CurrencyListComponent,
+    EditCurrencyConfigurationComponent
   ],
   imports: [
     BrowserModule,
