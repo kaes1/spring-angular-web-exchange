@@ -15,6 +15,7 @@ import pl.polsl.webexchange.user.User;
 import pl.polsl.webexchange.user.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Component
@@ -33,28 +34,36 @@ public class DataInitializer implements ApplicationRunner {
 
         WebExchangeProperties.UserConfig initialAdmin = webExchangeProperties.getAdmin();
 
-        User admin = new User(initialAdmin.getEmail(), initialAdmin.getUsername(), passwordEncoder.encode(initialAdmin.getPassword()), Role.ROLE_ADMIN);
-        admin.activateAccount();
-        admin = userRepository.save(admin);
+        Optional<User> existingAdmin = userRepository.findByUsernameIgnoreCase(initialAdmin.getUsername());
+        if (existingAdmin.isEmpty()) {
+            User admin = new User(initialAdmin.getEmail(), initialAdmin.getUsername(), passwordEncoder.encode(initialAdmin.getPassword()), Role.ROLE_ADMIN);
+            admin.activateAccount();
+            admin = userRepository.save(admin);
+        }
 
         WebExchangeProperties.UserConfig initialUser = webExchangeProperties.getUser();
 
-        User user = new User(initialUser.getEmail(), initialUser.getUsername(), passwordEncoder.encode(initialUser.getPassword()), Role.ROLE_USER);
-        user.activateAccount();
-        user = userRepository.save(user);
+        Optional<User> existingUser = userRepository.findByUsernameIgnoreCase(initialUser.getUsername());
+        if (existingUser.isEmpty()) {
+            User user = new User(initialUser.getEmail(), initialUser.getUsername(), passwordEncoder.encode(initialUser.getPassword()), Role.ROLE_USER);
+            user.activateAccount();
+            user = userRepository.save(user);
+        }
 
         List<WebExchangeProperties.CurrencyConfig> initialCurrencies = webExchangeProperties.getInitialCurrencies();
 
         exchangeRateApiService.getAllValidCurrencyCodes().forEach(currencyCode -> {
             Currency currency = new Currency(currencyCode.toUpperCase());
-            initialCurrencies.stream()
-                    .filter(currencyConfig -> currencyConfig.getCurrencyCode().equals(currencyCode))
-                    .findFirst()
-                    .ifPresent(currencyConfig -> {
-                        currency.setActive(true);
-                        currency.setCountry(currencyConfig.getCountry());
-                    });
-            currencyRepository.save(currency);
+            if (currencyRepository.findByCurrencyCode(currencyCode.toUpperCase()).isEmpty()) {
+                initialCurrencies.stream()
+                        .filter(currencyConfig -> currencyConfig.getCurrencyCode().equals(currencyCode))
+                        .findFirst()
+                        .ifPresent(currencyConfig -> {
+                            currency.setActive(true);
+                            currency.setCountry(currencyConfig.getCountry());
+                        });
+                currencyRepository.save(currency);
+            }
         });
 
         this.currencyRateUpdater.updateCurrencyRates();
