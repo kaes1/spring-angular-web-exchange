@@ -24,8 +24,8 @@
     </form>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
-    <button class="btn btn-primary" ngbAutofocus (click)="onSubmit()">
+    <button class="btn btn-secondary" style="width: 100px" (click)="onCancel()">Cancel</button>
+    <button class="btn btn-primary" ngbAutofocus style="width: 100px" (click)="onSubmit()">
       <span *ngIf="!inProgress">Confirm</span>
       <span *ngIf="inProgress" class="spinner-border spinner-border-sm" role="status"></span>
     </button>
