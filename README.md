@@ -9,6 +9,9 @@ Projekt zaliczeniowy na OiRPOS i PAI.
 PostgreSQL and pgAdmin are available via docker. To start them run `docker-compose up` in the root project folder.
 
 ### Running application for development:
+- Change properties in `application.yml`  
+  registerConfirmationUrl: "http://localhost:4200/register-confirmation/"
+ 
 - Run WebExchangeApplication from web-exchange-server (using IDE or spring-boot:run).
 - Install frontend packages by running `npm install` inside web-exchange-frontend directory.
 - Run frontend by running `npm start` inside web-exchange-frontend directory.
