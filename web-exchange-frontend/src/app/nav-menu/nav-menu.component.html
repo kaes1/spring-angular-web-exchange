@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" [routerLink]="['/']">
     <img src="/assets/iconfinder_currencysvg_1579795.svg" width="30" height="30" class="d-inline-block align-top mr-2">
     WebExchange
@@ -12,13 +12,22 @@
   <div class="collapse navbar-collapse" id="navbarContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link text-light" [routerLink]="['/']">Home</a>
+        <a class="nav-link text-light" [routerLink]="['/']">
+          <i class="fas fa-home mr-1"></i>
+          Home
+        </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-light" [routerLink]="['/graph']">Graph</a>
+        <a class="nav-link text-light" [routerLink]="['/graph']">
+          <i class="fas fa-chart-line mr-1"></i>
+          Graph
+        </a>
       </li>
       <li class="nav-item" *ngIf="loggedIn && !isAdmin">
-        <a class="nav-link text-light" [routerLink]="['/operation-history']">Operation History</a>
+        <a class="nav-link text-light" [routerLink]="['/operation-history']">
+          <i class="fas fa-list-ul mr-1"></i>
+          Operation History
+        </a>
       </li>
       <li class="nav-item" *ngIf="loggedIn && isAdmin">
         <a class="nav-link text-light" [routerLink]="['/admin-panel']">Admin Panel</a>
@@ -26,20 +35,41 @@
     </ul>
 
 
+
     <span class="text-light mx-1" *ngIf="loggedIn">Logged in as: {{username}}</span>
-    <div class="nav-item mx-1">
+
+    <div class="input-group mx-1" style="width: 205px">
+      <div class="input-group-prepend">
+        <span class="input-group-text bg-dark text-light"> Base Currency </span>
+      </div>
       <select class="form-control bg-dark text-light" id="baseCurrencyInput" name="currency"
               (change)="onCurrencySelected()"
-              [(ngModel)]="baseCurrency">
+              [(ngModel)]="baseCurrency" >
         <option *ngFor="let currency of currencies">{{currency.currencyCode}}</option>
       </select>
     </div>
-    <button class="btn btn-outline-light mx-1" (click)="tradeCurrency()" *ngIf="loggedIn && !isAdmin">Trade Currency
+
+
+    <button class="btn btn-outline-light mx-1" (click)="tradeCurrency()" *ngIf="loggedIn && !isAdmin">
+      <i class="fas fa-columns mr-sm-1"></i>
+      Trade Currency
     </button>
-    <button class="btn btn-outline-light mx-1" (click)="addFunds()" *ngIf="loggedIn && !isAdmin">Add Funds</button>
-    <button class="btn btn-outline-light mx-1" [routerLink]="['/register']" *ngIf="!loggedIn">Register</button>
-    <button class="btn btn-outline-light mx-1" [routerLink]="['/login']" *ngIf="!loggedIn">Login</button>
-    <button class="btn btn-outline-light mx-1" (click)="logout()" [routerLink]="['/']" *ngIf="loggedIn">Logout</button>
+    <button class="btn btn-outline-light mx-1" (click)="addFunds()" *ngIf="loggedIn && !isAdmin">
+      <i class="far fa-money-bill-alt mr-sm-1"> </i>
+      Add Funds
+    </button>
+    <button class="btn btn-outline-light mx-1" [routerLink]="['/register']" *ngIf="!loggedIn">
+      <i class="fas fa-user-edit mr-sm-1"></i>
+      Register
+    </button>
+    <button class="btn btn-outline-light mx-1" [routerLink]="['/login']" *ngIf="!loggedIn">
+      <i class="fas fa-sign-in-alt mr-sm-1"></i>
+      Login
+    </button>
+    <button class="btn btn-outline-light mx-1" (click)="logout()" [routerLink]="['/']" *ngIf="loggedIn">
+      <i class="fas fa-door-open mr-sm-1"></i>
+      Logout
+    </button>
 
   </div>
 </nav>
